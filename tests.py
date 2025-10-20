@@ -168,5 +168,16 @@ class TestAgents(unittest.TestCase):
                 my_food.cell.coordinate,
                 )
 
+        my_ant.grab_food(my_food, 1)
+
+        self.assertEqual(
+                my_ant.food,
+                1,
+                )
+
+        self.assertEqual(
+                my_food.food,
+                -1,
+                )
 
 unittest.main()

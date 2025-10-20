@@ -41,7 +41,7 @@ class Food(FixedAgent, HasFoodStorage):
         super().__init__(model)
         self.cell = self.model.grid[coords]
 
-    def remove_food(amt):
+    def remove_food(self, amt):
         self.food -= amt
         return amt
 
