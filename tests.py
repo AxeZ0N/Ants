@@ -1,18 +1,17 @@
 import unittest
 
 from mesa import Model as Model_Class
-from mesa.discrete_space import OrthogonalMooreGrid, CellAgent, Cell
+from mesa.discrete_space import Cell, CellAgent, FixedAgent, OrthogonalMooreGrid
 
 from model import Model
-from agents import Ant
-
+from agents import Ant, Hill, Food
 
 class TestModel(unittest.TestCase):
     @staticmethod
     def generate_model():
         my_model = Model(
-                width = 10,
-                height = 10,
+                width = 3,
+                height = 3,
                 seed = 1,
                 )
         return my_model
@@ -36,22 +35,35 @@ class TestModel(unittest.TestCase):
 
 class TestAgents(unittest.TestCase):
     @staticmethod
-    def generate_ant():
-        test_coord = (0,0)
+    def generate_ant(model, test_coord = (0,0)):
         my_ant = Ant(
+                model = model,
                 coords = test_coord,
                 )
         return my_ant
+
+    @staticmethod
+    def generate_hill(model, test_coord = (0,0)):
+        my_hill = Hill(
+                model = model,
+                coords = test_coord,
+                )
+        return my_hill
         
-    def test_ant(self):
+    @staticmethod
+    def generate_food(model, test_coord = (0,0)):
+        my_food = Food(
+                model = model,
+                coords = test_coord,
+                )
+        return my_food
+
+    def test_ant_init(self):
         test_coord = (0,0)
 
         my_model = TestModel.generate_model()
 
-        my_ant = Ant(
-                model = my_model,
-                coords = test_coord,
-                )
+        my_ant = TestAgents.generate_ant(my_model)
 
         self.assertTrue(
                 issubclass(
@@ -69,6 +81,58 @@ class TestAgents(unittest.TestCase):
 
         self.assertEqual(
                 my_ant.cell.coordinate,
+                test_coord
+                )
+
+    def test_hill_init(self):
+        test_coord = (0,0)
+
+        my_model = TestModel.generate_model()
+
+        my_hill = TestAgents.generate_hill(my_model)
+
+        self.assertTrue(
+                issubclass(
+                    type(my_hill),
+                    FixedAgent,
+                    )
+                )
+
+        self.assertTrue(
+                issubclass(
+                    type(my_hill.cell),
+                    Cell,
+                    )
+                )
+
+        self.assertEqual(
+                my_hill.cell.coordinate,
+                test_coord
+                )
+
+    def test_food_init(self):
+        test_coord = (0,0)
+
+        my_model = TestModel.generate_model()
+
+        my_food = TestAgents.generate_food(my_model)
+
+        self.assertTrue(
+                issubclass(
+                    type(my_food),
+                    FixedAgent,
+                    )
+                )
+
+        self.assertTrue(
+                issubclass(
+                    type(my_food.cell),
+                    Cell,
+                    )
+                )
+
+        self.assertEqual(
+                my_food.cell.coordinate,
                 test_coord
                 )
 

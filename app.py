@@ -1,6 +1,7 @@
 import solara
 import mesa
 import model
+import agents
 
 from mesa.discrete_space import Cell
 from mesa.visualization import SolaraViz, SpaceRenderer, make_plot_component
@@ -14,7 +15,13 @@ def AgentInfo(model):
     if not len(ants): return
     solara.Info(f'Info goes here!')
 
-model = model.Model()
+players = [
+        agents.Ant,
+        agents.Hill,
+        agents.Food,
+        ]
+
+model = model.Model(players = players)
 
 model_params = {
         'width':10,
