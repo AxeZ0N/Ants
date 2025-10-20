@@ -155,5 +155,17 @@ class TestAgents(unittest.TestCase):
                 test_coord,
                 )
 
+    def test_ant_grab_food(self):
+        test_coord = (0,0)
+
+        my_model = TestModel.generate_model()
+
+        my_ant = TestAgents.generate_ant(my_model)
+        my_food = TestAgents.generate_food(my_model)
+
+        self.assertEqual(
+                my_ant.cell.coordinate,
+                my_food.cell.coordinate,
+                )
 
 unittest.main()
