@@ -1,7 +1,26 @@
 from mesa.discrete_space import Cell, CellAgent, FixedAgent
 
 class HasFoodStorage:
+    '''
+    Allows carrying/holding food
+    '''
     food = 0
+
+    def grab_food(self, food_agent, amt):
+        '''
+        Moves amt food into storage
+        '''
+        assert issubclass(type(food_agent), HasFoodStorage)
+        food_agent.remove_food(amt)
+        self.food += amt
+
+    def remove_food(self, amt):
+        '''
+        Remove amt food from self
+        '''
+        self.food -= amt
+        return amt
+
 
 class Ant(CellAgent, HasFoodStorage):
     '''
@@ -15,13 +34,6 @@ class Ant(CellAgent, HasFoodStorage):
     def step(self):
         self.cell = self.cell.get_neighborhood().select_random_cell()
 
-    def grab_food(self, food_agent, amt):
-        '''
-        Moves amt food into the ant's storage
-        '''
-        assert issubclass(type(food_agent), HasFoodStorage)
-        food_agent.remove_food(amt)
-        self.food += amt
 
 class Hill(FixedAgent, HasFoodStorage):
     '''
@@ -32,6 +44,7 @@ class Hill(FixedAgent, HasFoodStorage):
         super().__init__(model)
         self.cell = self.model.grid[coords]
 
+
 class Food(FixedAgent, HasFoodStorage):
     '''
     Ants grab a Chunk of Food and carry it home
@@ -40,8 +53,4 @@ class Food(FixedAgent, HasFoodStorage):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
-
-    def remove_food(self, amt):
-        self.food -= amt
-        return amt
 
