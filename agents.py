@@ -9,6 +9,9 @@ class Ant(CellAgent):
         super().__init__(model)
         self.cell = self.model.grid[coords]
 
+    def step(self):
+        self.cell = self.cell.get_neighborhood().select_random_cell()
+
 class Hill(FixedAgent):
     '''
     Ants return food to home

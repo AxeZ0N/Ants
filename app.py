@@ -27,6 +27,7 @@ model_params = {
         'width':3,
         'height':3,
         'seed':1,
+        'players':players,
         }
 
 plot_comp = make_plot_component("encoding", page=1)
