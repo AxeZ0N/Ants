@@ -11,7 +11,7 @@ class Model(Model):
             player.create_agents(
                     self,
                     1,
-                    self.grid.empties.select_random_cell().coordinate
+                    self.grid.empties.select_random_cell().coordinate,
                     )
 
     def __init__(self,

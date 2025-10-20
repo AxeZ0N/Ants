@@ -136,4 +136,24 @@ class TestAgents(unittest.TestCase):
                 test_coord
                 )
 
+    def test_ant_move(self):
+        test_coord = (0,0)
+
+        my_model = TestModel.generate_model()
+
+        my_ant = TestAgents.generate_ant(my_model)
+
+        self.assertEqual(
+                my_ant.cell.coordinate,
+                test_coord,
+                )
+
+        my_model.step()
+
+        self.assertNotEqual(
+                my_ant.cell.coordinate,
+                test_coord,
+                )
+
+
 unittest.main()

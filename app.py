@@ -24,8 +24,8 @@ players = [
 model = model.Model(players = players)
 
 model_params = {
-        'width':10,
-        'height':10,
+        'width':3,
+        'height':3,
         'seed':1,
         }
 
@@ -33,7 +33,7 @@ plot_comp = make_plot_component("encoding", page=1)
 
 space_renderer = SpaceRenderer(
         model = model, 
-        backend="matplotlib"
+        backend = "matplotlib"
         )
 
 renderer = space_renderer.render(
