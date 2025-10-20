@@ -164,50 +164,61 @@ class TestAgents(unittest.TestCase):
         my_food = TestAgents.generate_food(my_model)
         my_hill = TestAgents.generate_hill(my_model)
 
-        my_food.food = 1
-
         self.assertEqual(
                 my_ant.cell.coordinate,
                 my_food.cell.coordinate,
                 my_hill.cell.coordinate,
                 )
 
+        my_food.FoodStorage.food = 1
+
         self.assertEqual(
-                my_ant.food,
-                0,
+                my_ant.FoodStorage.food,
+                0
                 )
 
         self.assertEqual(
-                my_hill.food,
-                0,
+                my_food.FoodStorage.food,
+                1
                 )
 
         self.assertEqual(
-                my_food.food,
-                1,
+                my_hill.FoodStorage.food,
+                0
                 )
 
-        my_ant.add_food(my_food, 1)
+        my_ant.FoodStorage.add_food(my_food, 1)
 
         self.assertEqual(
-                my_ant.food,
-                1,
-                )
-
-        my_hill.add_food(my_ant, 1)
-
-        self.assertEqual(
-                my_ant.food,
-                0,
+                my_ant.FoodStorage.food,
+                1
                 )
 
         self.assertEqual(
-                my_hill.food,
-                1,
+                my_food.FoodStorage.food,
+                0
                 )
 
         self.assertEqual(
-                my_food.food,
-                0,
+                my_hill.FoodStorage.food,
+                0
                 )
+
+        my_hill.FoodStorage.add_food(my_ant, 1)
+
+        self.assertEqual(
+                my_ant.FoodStorage.food,
+                0
+                )
+
+        self.assertEqual(
+                my_food.FoodStorage.food,
+                0
+                )
+
+        self.assertEqual(
+                my_hill.FoodStorage.food,
+                1
+                )
+
 unittest.main()
