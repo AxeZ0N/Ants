@@ -6,7 +6,7 @@ class HasFoodStorage:
     '''
     food = 0
 
-    def grab_food(self, food_agent, amt):
+    def add_food(self, food_agent, amt):
         '''
         Moves amt food into storage
         '''

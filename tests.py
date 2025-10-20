@@ -155,23 +155,37 @@ class TestAgents(unittest.TestCase):
                 test_coord,
                 )
 
-    def test_ant_grab_food(self):
+    def test_agents_move_food(self):
         test_coord = (0,0)
 
         my_model = TestModel.generate_model()
 
         my_ant = TestAgents.generate_ant(my_model)
         my_food = TestAgents.generate_food(my_model)
+        my_hill = TestAgents.generate_hill(my_model)
 
         self.assertEqual(
                 my_ant.cell.coordinate,
                 my_food.cell.coordinate,
+                my_hill.cell.coordinate,
                 )
 
-        my_ant.grab_food(my_food, 1)
+        my_ant.add_food(my_food, 1)
 
         self.assertEqual(
                 my_ant.food,
+                1,
+                )
+
+        my_hill.add_food(my_ant, 1)
+
+        self.assertEqual(
+                my_ant.food,
+                0,
+                )
+
+        self.assertEqual(
+                my_hill.food,
                 1,
                 )
 
@@ -179,5 +193,4 @@ class TestAgents(unittest.TestCase):
                 my_food.food,
                 -1,
                 )
-
 unittest.main()
