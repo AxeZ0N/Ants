@@ -19,6 +19,7 @@ class Ant(CellAgent, HasFoodStorage):
         '''
         Moves amt food into the ant's storage
         '''
+        assert issubclass(type(food_agent), HasFoodStorage)
         food_agent.remove_food(amt)
         self.food += amt
 
