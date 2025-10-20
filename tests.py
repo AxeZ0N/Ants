@@ -164,10 +164,27 @@ class TestAgents(unittest.TestCase):
         my_food = TestAgents.generate_food(my_model)
         my_hill = TestAgents.generate_hill(my_model)
 
+        my_food.food = 1
+
         self.assertEqual(
                 my_ant.cell.coordinate,
                 my_food.cell.coordinate,
                 my_hill.cell.coordinate,
+                )
+
+        self.assertEqual(
+                my_ant.food,
+                0,
+                )
+
+        self.assertEqual(
+                my_hill.food,
+                0,
+                )
+
+        self.assertEqual(
+                my_food.food,
+                1,
                 )
 
         my_ant.add_food(my_food, 1)
@@ -191,6 +208,6 @@ class TestAgents(unittest.TestCase):
 
         self.assertEqual(
                 my_food.food,
-                -1,
+                0,
                 )
 unittest.main()
