@@ -11,6 +11,7 @@ class HasFoodStorage:
         Moves amt food into storage
         '''
         assert issubclass(type(food_agent), HasFoodStorage)
+        assert self.cell.coordinate == food_agent.cell.coordinate
         food_agent.remove_food(amt)
         self.food += amt
 
