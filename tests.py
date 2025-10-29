@@ -167,7 +167,7 @@ class TestAgents(unittest.TestCase):
         self.assertEqual(my_ant.FoodStorage.food, 0)
         self.assertEqual(my_food.FoodStorage.food, 1)
 
-        my_ant.FoodStorage.add_food(my_food, 1)
+        my_ant.FoodStorage.add(my_food, 1)
 
         self.assertEqual(my_ant.FoodStorage.food, 1)
 

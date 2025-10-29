@@ -1,20 +1,37 @@
 from mesa.discrete_space import Cell, CellAgent, FixedAgent
+import abc
 
-class FoodStorage:
+class Storage:
+    def _check_storage(self, agent_storage):
+        assert issubclass(type(agent_storage), self)
+
+    @abc.abstractmethod
+    def add(self, agent, amt): pass
+
+    @abc.abstractmethod
+    def remove(self, amt): pass
+
+class FoodStorage(Storage):
     '''
     Allows carrying/holding food
     '''
     food = 0
 
-    def add_food(self, agent, amt):
+    def add(self, agent, amt):
+        self.add_food(agent, amt)
+
+    def remove(self, amt):
+        return self.remove(amt)
+
+    def _add_food(self, agent, amt):
         '''
         Moves amt food into storage
         '''
-        assert issubclass(type(agent.FoodStorage), FoodStorage)
+        self._check_storage(agent.FoodStorage)
         agent.FoodStorage.remove_food(amt)
         self.food += amt
 
-    def remove_food(self, amt):
+    def _remove_food(self, amt):
         '''
         Remove amt food from self
         '''
