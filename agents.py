@@ -1,21 +1,37 @@
 from mesa.discrete_space import Cell, CellAgent, FixedAgent
+import abc
 
-class HasFoodStorage:
+class Storage:
+    def _check_storage(self, agent_storage):
+        assert issubclass(type(agent_storage), type(self))
+
+    @abc.abstractmethod
+    def add(self, agent, amt): pass
+
+    @abc.abstractmethod
+    def remove(self, amt): pass
+
+class FoodStorage(Storage):
     '''
     Allows carrying/holding food
     '''
     food = 0
 
-    def add_food(self, food_agent, amt):
+    def add(self, agent, amt):
+        self._add_food(agent, amt)
+
+    def remove(self, amt):
+        return self._remove_food(amt)
+
+    def _add_food(self, agent, amt):
         '''
         Moves amt food into storage
         '''
-        assert issubclass(type(food_agent), HasFoodStorage)
-        assert self.cell.coordinate == food_agent.cell.coordinate
-        food_agent.remove_food(amt)
+        self._check_storage(agent.FoodStorage)
+        agent.FoodStorage._remove_food(amt)
         self.food += amt
 
-    def remove_food(self, amt):
+    def _remove_food(self, amt):
         '''
         Remove amt food from self
         '''
@@ -23,7 +39,7 @@ class HasFoodStorage:
         return amt
 
 
-class Ant(CellAgent, HasFoodStorage):
+class Ant(CellAgent):
     '''
     Wander around until bumping into food
     '''
@@ -31,12 +47,13 @@ class Ant(CellAgent, HasFoodStorage):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
+        self.FoodStorage = FoodStorage()
 
     def step(self):
         self.cell = self.cell.get_neighborhood().select_random_cell()
 
 
-class Hill(FixedAgent, HasFoodStorage):
+class Hill(FixedAgent):
     '''
     Ants return food to home
     '''
@@ -44,9 +61,10 @@ class Hill(FixedAgent, HasFoodStorage):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
+        self.FoodStorage = FoodStorage()
 
 
-class Food(FixedAgent, HasFoodStorage):
+class Food(FixedAgent):
     '''
     Ants grab a Chunk of Food and carry it home
     '''
@@ -54,4 +72,5 @@ class Food(FixedAgent, HasFoodStorage):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
+        self.FoodStorage = FoodStorage()
 
