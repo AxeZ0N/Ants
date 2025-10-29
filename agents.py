@@ -3,7 +3,7 @@ import abc
 
 class Storage:
     def _check_storage(self, agent_storage):
-        assert issubclass(type(agent_storage), self)
+        assert issubclass(type(agent_storage), type(self))
 
     @abc.abstractmethod
     def add(self, agent, amt): pass
@@ -18,17 +18,17 @@ class FoodStorage(Storage):
     food = 0
 
     def add(self, agent, amt):
-        self.add_food(agent, amt)
+        self._add_food(agent, amt)
 
     def remove(self, amt):
-        return self.remove(amt)
+        return self._remove_food(amt)
 
     def _add_food(self, agent, amt):
         '''
         Moves amt food into storage
         '''
         self._check_storage(agent.FoodStorage)
-        agent.FoodStorage.remove_food(amt)
+        agent.FoodStorage._remove_food(amt)
         self.food += amt
 
     def _remove_food(self, amt):
