@@ -1,7 +1,7 @@
 from mesa.discrete_space import Cell, CellAgent, FixedAgent
-from agent_mixins import FoodStorage
+from agent_mixins import FoodStorage, EmitSmell
 
-class Ant(CellAgent, FoodStorage):
+class Ant(CellAgent, FoodStorage, EmitSmell):
     '''
     Wander around until bumping into food
     '''
@@ -24,11 +24,21 @@ class Hill(FixedAgent, FoodStorage):
         self.cell = self.model.grid[coords]
 
 
-class Food(FixedAgent, FoodStorage):
+class Food(FixedAgent, FoodStorage, EmitSmell):
     '''
     Ants grab a Chunk of Food and carry it home
     '''
     color, size = 'orange', 100
+    def __init__(self, model, coords):
+        super().__init__(model)
+        self.cell = self.model.grid[coords]
+
+
+class Smell(FixedAgent, EmitSmell):
+    '''
+    Doesn't move, tracks previous ant positions
+    '''
+    color, size = 'green', 75
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]

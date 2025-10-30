@@ -1,10 +1,26 @@
 import abc
 
-class Storage:
-    storage = []
+class MixinBase: pass
 
-    def _check_storage(self, agent_storage):
-        assert issubclass(type(agent_storage), type(self))
+class Smells(MixinBase):
+    '''
+    Smell related methods
+    '''
+    scent = None
+
+    def set_scent(self, scent):
+        self.scent = scent
+
+class EmitSmell(Smells):
+    '''
+    Drops related scent on the field
+    '''
+
+    def drop_smell(self):
+        smell = self.scent(self.model, self.coords)
+
+class Storage(MixinBase):
+    storage = []
 
 class FoodStorage(Storage):
     '''
@@ -21,4 +37,3 @@ class FoodStorage(Storage):
         ''' Remove amt food from self '''
         self.food -= amt
         return amt
-
