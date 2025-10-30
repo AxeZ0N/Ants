@@ -162,14 +162,14 @@ class TestAgents(unittest.TestCase):
         my_ant = TestAgents.generate_ant(my_model)
         my_food = TestAgents.generate_food(my_model)
 
-        my_food.FoodStorage.food = 1
+        my_food.add_food(1)
 
-        self.assertEqual(my_ant.FoodStorage.food, 0)
-        self.assertEqual(my_food.FoodStorage.food, 1)
+        self.assertEqual(my_ant.add_food(0), 0)
+        self.assertEqual(my_food.add_food(0), 1)
 
-        my_ant.FoodStorage.add(my_food, 1)
+        my_ant.add_food(my_food.remove_food(1))
 
-        self.assertEqual(my_ant.FoodStorage.food, 1)
+        self.assertEqual(my_ant.add_food(0), 1)
 
 
 unittest.main()

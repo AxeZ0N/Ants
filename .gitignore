@@ -12,6 +12,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+.vim
 .Python
 build/
 develop-eggs/
