@@ -4,7 +4,7 @@ from mesa import Model as Model_Class
 from mesa.discrete_space import Cell, CellAgent, FixedAgent, OrthogonalMooreGrid
 
 from model import Model
-from agents import Ant, Hill, Food
+from agents import Ant, Hill, Food, Smell
 
 class TestModel(unittest.TestCase):
     @staticmethod
@@ -162,14 +162,45 @@ class TestAgents(unittest.TestCase):
         my_ant = TestAgents.generate_ant(my_model)
         my_food = TestAgents.generate_food(my_model)
 
-        my_food.FoodStorage.food = 1
+        my_food.add_food(1)
 
-        self.assertEqual(my_ant.FoodStorage.food, 0)
-        self.assertEqual(my_food.FoodStorage.food, 1)
+        self.assertEqual(my_ant.add_food(0), 0)
+        self.assertEqual(my_food.add_food(0), 1)
 
-        my_ant.FoodStorage.add(my_food, 1)
+        my_ant.add_food(my_food.remove_food(1))
 
-        self.assertEqual(my_ant.FoodStorage.food, 1)
+        self.assertEqual(my_ant.add_food(0), 1)
+
+    def test_smell_set(self):
+        my_model = TestModel.generate_model()
+        my_food = TestAgents.generate_ant(my_model)
+
+        self.assertEqual(my_food.scent, None)
+
+        my_food.set_scent(Smell)
+
+        self.assertEqual(my_food.scent, Smell)
+
+    def test_smell_drop(self):
+        my_model = TestModel.generate_model()
+        my_ant = TestAgents.generate_ant(my_model)
+
+        test_cell = my_model.grid[0,0]
+
+        class TestSmell(Smell):
+            model = my_model
+            coords = test_cell
+
+            def __new__(self, *args): 
+                return self
+
+        test_smell = TestSmell()
+
+        my_ant.set_scent(test_smell)
+
+        my_ant.drop_smell()
+
+        self.assertIn(test_smell, test_cell.agents)
 
 
 unittest.main()
