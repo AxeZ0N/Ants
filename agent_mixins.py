@@ -17,7 +17,8 @@ class EmitSmell(Smells):
     '''
 
     def drop_smell(self):
-        smell = self.scent(self.model, self.coords)
+        smell = self.scent(self.model, self.cell.coordinate)
+        self.cell.add_agent(smell)
 
 class Storage(MixinBase):
     storage = []

@@ -181,7 +181,26 @@ class TestAgents(unittest.TestCase):
 
         self.assertEqual(my_food.scent, Smell)
 
+    def test_smell_drop(self):
+        my_model = TestModel.generate_model()
+        my_ant = TestAgents.generate_ant(my_model)
 
+        test_cell = my_model.grid[0,0]
+
+        class TestSmell(Smell):
+            model = my_model
+            coords = test_cell
+
+            def __new__(self, *args): 
+                return self
+
+        test_smell = TestSmell()
+
+        my_ant.set_scent(test_smell)
+
+        my_ant.drop_smell()
+
+        self.assertIn(test_smell, test_cell.agents)
 
 
 unittest.main()
