@@ -10,7 +10,6 @@ class Ant(CellAgent):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
-        self.FoodStorage = FoodStorage()
 
     def step(self):
         self.cell = self.cell.get_neighborhood().select_random_cell()
@@ -26,7 +25,6 @@ class Hill(FixedAgent):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
-        self.FoodStorage = FoodStorage()
 
 
 class Food(FixedAgent):
@@ -39,4 +37,3 @@ class Food(FixedAgent):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
-        self.FoodStorage = FoodStorage()
