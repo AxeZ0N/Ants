@@ -203,7 +203,6 @@ class TestAgents(unittest.TestCase):
         self.assertIn(test_smell, test_cell.agents)
 
 class TestBrain(unittest.TestCase):
-
     def test_brain_act_random(self):
         my_model = TestModel.generate_model()
         my_ant = TestAgents.generate_ant(my_model)
@@ -211,6 +210,4 @@ class TestBrain(unittest.TestCase):
         my_brain = my_ant.brain
         self.assertEqual([Hill, Food, Smell,],my_brain.priority)
         print("brain")
-
-
 unittest.main()

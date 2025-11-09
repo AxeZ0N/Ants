@@ -13,5 +13,4 @@ class Brain:
         # Cycle through priority list, dispatch method if seen
 
         top_prio = priority.pop(0)
-        top = [x for x in agents_in_cell
-               if type(x) is top_prio]
+        top = [x for x in agents_in_cell if type(x) is not top_prio]
