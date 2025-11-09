@@ -173,7 +173,7 @@ class TestAgents(unittest.TestCase):
 
     def test_smell_set(self):
         my_model = TestModel.generate_model()
-        my_food = TestAgents.generate_ant(my_model)
+        my_food = TestAgents.generate_food(my_model)
 
         self.assertEqual(my_food.scent, None)
 
