@@ -15,8 +15,8 @@ class Model(Model):
                     )
 
     def __init__(self,
-                 width = 3,
-                 height = 3,
+                 width = 10,
+                 height = 10,
                  seed = 1,
                  players = None
                  ): 
