@@ -9,8 +9,10 @@ class Ant(CellAgent, FoodStorage, EmitSmell):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
+        self.smell = self.set_scent(Smell)
 
     def step(self):
+        self.drop_smell()
         self.cell = self.cell.get_neighborhood().select_random_cell()
 
 
