@@ -1,0 +1,5 @@
+.vim
+.sh
+.pyc
+venv/
+__pycache__/
