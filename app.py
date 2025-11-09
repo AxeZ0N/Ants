@@ -21,14 +21,15 @@ players = [
         agents.Food,
         ]
 
-model = model.Model(players = players)
 
 model_params = {
-        'width':3,
-        'height':3,
+        'width':10,
+        'height':10,
         'seed':1,
         'players':players,
         }
+
+model = model.Model(**model_params)
 
 plot_comp = make_plot_component("encoding", page=1)
 

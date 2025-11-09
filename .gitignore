@@ -1,12 +1,13 @@
 <<<<<<< HEAD
-venv/
-.vim
-__pycache__
 =======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
 *$py.class
+venv/
+.vim
+.sh
+__pycache__
 
 # C extensions
 *.so

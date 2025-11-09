@@ -14,4 +14,4 @@ class Brain:
 
         top_prio = priority.pop(0)
         top = [x for x in agents_in_cell
-               if type(x) is not top_prio]
+               if type(x) is top_prio]
