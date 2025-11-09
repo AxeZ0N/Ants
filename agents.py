@@ -1,4 +1,9 @@
-from mesa.discrete_space import Cell, CellAgent, FixedAgent
+"""
+Things that live in the model
+"""
+
+from mesa.discrete_space import CellAgent, FixedAgent
+
 
 class Ant(CellAgent):
     """
