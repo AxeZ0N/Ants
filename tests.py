@@ -5,7 +5,7 @@ Silly little tests
 import unittest
 
 from mesa import Model as Model_Class
-from mesa.discrete_space import CellAgent, FixedAgent, OrthogonalMooreGrid
+from mesa.discrete_space import Cell, CellAgent, FixedAgent, OrthogonalMooreGrid
 
 from model import Model
 
@@ -49,6 +49,8 @@ class TestModel(unittest.TestCase):
 
 
 class TestAgent(unittest.TestCase):
+    """Basic inits and such"""
+
     BLACKLIST = [
         "Agent",
         "CellAgent",
@@ -66,6 +68,9 @@ class TestAgent(unittest.TestCase):
 
     def setUp(self):
         self.model = TestModel().setUp()
+
+    def tearDown(self):
+        del self.model
 
     def test_init(self):
         """Place a single unit of every agent found in the model"""
@@ -93,6 +98,52 @@ class TestAgent(unittest.TestCase):
             my_agents.append(new_agent)
 
         self.model.step()
+
+
+class TestAnt(unittest.TestCase):
+    """Test ant specific agent stuff"""
+    ant_spawn = (4,4)
+    def setUp(self):
+        self.model = TestModel().setUp()
+        self.ant_agent = agents.Ant(self.model, self.ant_spawn)
+
+    def tearDown(self):
+        del self.model
+
+    def test_history(self):
+        """Ants remember where they've been"""
+        [self.model.step() for _ in range(3)]
+        self.assertEqual(self.ant_agent.history[0].coordinate, self.ant_spawn)
+
+        self.assertEqual(self.ant_agent.history[-1], self.ant_agent.cell)
+
+    def showgrid(self):
+        print(self.ant_agent.cell.coordinate)
+        for i in range(self.model.grid.width):
+            for j in range(self.model.grid.height):
+                cell = self.model.grid[(i,j)]
+                if len(cell.agents):
+                    print('x',end='')
+                else:
+                    print('.',end='')
+            print()
+
+    def test_prefer_new_cells(self):
+        """
+        Ants should try to move to cells they haven't seen before
+        This test spawns a single wide path, meaning the only way is forward.
+        If ants prefer new cells, there will be a point where there's no cells left unseen
+        """
+
+        self.model = Model(1,10,)
+        self.ant_agent = agents.Ant(self.model, (0,0))
+        #self.ant_agent.is_test = True
+
+        for i in range(10):
+            hx_len = len(self.ant_agent.history)
+            self.assertEqual(hx_len, len(set(self.ant_agent.history)))
+            #self.showgrid()
+            self.model.step()
 
 
 unittest.main()

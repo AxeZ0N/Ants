@@ -9,15 +9,22 @@ class Ant(CellAgent):
     """
     Wander around until bumping into food
     """
+    is_test = False
 
     color, size = "red", 100
 
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
+        self.history = [self.cell]
 
     def step(self):
-        self.cell = self.cell.get_neighborhood().select_random_cell()
+        next_step = [x for x in self.cell.get_neighborhood() if x not in self.history]
+        if self.model.grid.width == 1 and self.is_test:
+            print(f"I'm an ant, choosing from {len(next_step)} cells!")
+        if not len(next_step): next_step = list(self.cell.get_neighborhood())
+        self.cell = self.model.random.choice(next_step)
+        self.history.append(self.cell)
 
 
 class Hill(FixedAgent):
