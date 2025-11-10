@@ -20,7 +20,7 @@ class Model(mesa.Model):
                 self.grid.empties.select_random_cell().coordinate,
             )
 
-    def __init__(self, width=3, height=3, seed=1, players=None):
+    def __init__(self, width=10, height=10, seed=1, players=None):
 
         super().__init__(seed=seed)
 

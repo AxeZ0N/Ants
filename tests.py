@@ -5,172 +5,94 @@ Silly little tests
 import unittest
 
 from mesa import Model as Model_Class
-from mesa.discrete_space import Cell, CellAgent, FixedAgent, OrthogonalMooreGrid
+from mesa.discrete_space import CellAgent, FixedAgent, OrthogonalMooreGrid
 
 from model import Model
-from agents import Ant, Hill, Food
+
+import agents
 
 
 class MakeTestObj:
     """Builds agents and models for testing"""
 
-    def model(self, *args, **kwargs):
+    def model(self, *args, model=Model_Class, **kwargs):
         """Provide args for kwargs['model']"""
-        model = kwargs.pop("model")(*args)
-        return model
+        my_model = model(*args, **kwargs)
+        return my_model
 
-    def agent(self, *args, **kwargs):
+    def agent(self, *args, agent=CellAgent, **kwargs):
         """Provide args for kwargs['agent']"""
-        agent = kwargs.pop("agent")
-        return agent(*args)
-
-
-m = MakeTestObj().model(10, 10, model=Model)
-a = MakeTestObj().agent(m, (3, 3), agent=Ant)
+        my_agent = agent(*args, **kwargs)
+        return my_agent
 
 
 class TestModel(unittest.TestCase):
     """Basic inits and such"""
 
-    @staticmethod
-    def generate_model():
-        """Wrapper for model.generate_model"""
-        my_model = Model(
-            width=3,
-            height=3,
-            seed=1,
-        )
-        return my_model
+    def setUp(self):
+        self.model = MakeTestObj().model(model=Model)
+        return self.model
+
+    def tearDown(self):
+        del self.model
 
     def test_init(self):
         """Basic stuff"""
-        my_model = TestModel.generate_model()
+        my_model = self.model
 
         self.assertTrue(issubclass(type(my_model), Model_Class))
         self.assertTrue(issubclass(type(my_model.grid), OrthogonalMooreGrid))
 
+    def test_step(self):
+        """If this fails, it's a problem"""
+        self.model.step()
 
-class TestAgents(unittest.TestCase):
-    """Agents get tested for model compliance"""
 
-    @staticmethod
-    def generate_ant(model, test_coord=(0, 0)):
-        """Should be more generic"""
-        my_ant = Ant(
-            model=model,
-            coords=test_coord,
-        )
-        return my_ant
+class TestAgent(unittest.TestCase):
+    BLACKLIST = [
+        "Agent",
+        "CellAgent",
+        "FixedAgent",
+    ]
 
-    @staticmethod
-    def generate_hill(model, test_coord=(0, 0)):
-        """Should be more generic"""
-        my_hill = Hill(
-            model=model,
-            coords=test_coord,
-        )
-        return my_hill
+    def _get_agents_list(self):
+        """Snag agents from the file for testing"""
+        my_test_agents = [
+            v
+            for k, v in vars(agents).items()
+            if k not in self.BLACKLIST and not k.endswith("__")
+        ]
+        return my_test_agents
 
-    @staticmethod
-    def generate_food(model, test_coord=(0, 0)):
-        """Should be more generic"""
-        my_food = Food(
-            model=model,
-            coords=test_coord,
-        )
-        return my_food
+    def setUp(self):
+        self.model = TestModel().setUp()
 
-    def test_ant_init(self):
-        """Basic stuff"""
-        test_coord = (0, 0)
-
-        my_model = TestModel.generate_model()
-
-        my_ant = TestAgents.generate_ant(my_model)
-
-        self.assertTrue(
-            issubclass(
-                type(my_ant),
-                CellAgent,
+    def test_init(self):
+        """Place a single unit of every agent found in the model"""
+        agents_list = self._get_agents_list()
+        my_agents = []
+        for agent in agents_list:
+            random_cell = self.model.random.choice(list(self.model.grid.all_cells))
+            new_agent = MakeTestObj().agent(
+                self.model, random_cell.coordinate, agent=agent
             )
-        )
+            my_agents.append(new_agent)
 
-        self.assertTrue(
-            issubclass(
-                type(my_ant.cell),
-                Cell,
+        model_agents = list(self.model.agents)
+        self.assertEqual(set(my_agents), set(model_agents))
+
+    def test_agent_step(self):
+        """Make sure all the agents can step"""
+        agents_list = self._get_agents_list()
+        my_agents = []
+        for agent in agents_list:
+            random_cell = self.model.random.choice(list(self.model.grid.all_cells))
+            new_agent = MakeTestObj().agent(
+                self.model, random_cell.coordinate, agent=agent
             )
-        )
+            my_agents.append(new_agent)
 
-        self.assertEqual(my_ant.cell.coordinate, test_coord)
-
-    def test_hill_init(self):
-        """Basic stuff"""
-        test_coord = (0, 0)
-
-        my_model = TestModel.generate_model()
-
-        my_hill = TestAgents.generate_hill(my_model)
-
-        self.assertTrue(
-            issubclass(
-                type(my_hill),
-                FixedAgent,
-            )
-        )
-
-        self.assertTrue(
-            issubclass(
-                type(my_hill.cell),
-                Cell,
-            )
-        )
-
-        self.assertEqual(my_hill.cell.coordinate, test_coord)
-
-    def test_food_init(self):
-        """Basic stuff"""
-        test_coord = (0, 0)
-
-        my_model = TestModel.generate_model()
-
-        my_food = TestAgents.generate_food(my_model)
-
-        self.assertTrue(
-            issubclass(
-                type(my_food),
-                FixedAgent,
-            )
-        )
-
-        self.assertTrue(
-            issubclass(
-                type(my_food.cell),
-                Cell,
-            )
-        )
-
-        self.assertEqual(my_food.cell.coordinate, test_coord)
-
-    def test_ant_move(self):
-        """Basic stuff"""
-        test_coord = (0, 0)
-
-        my_model = TestModel.generate_model()
-
-        my_ant = TestAgents.generate_ant(my_model)
-
-        self.assertEqual(
-            my_ant.cell.coordinate,
-            test_coord,
-        )
-
-        my_model.step()
-
-        self.assertNotEqual(
-            my_ant.cell.coordinate,
-            test_coord,
-        )
+        self.model.step()
 
 
 unittest.main()
