@@ -33,11 +33,12 @@ class Model(mesa.Model):
         if players is not None:
             self._build_players(*players)
 
-        self.info = solara.reactive(self.get_info(), equals=lambda x,y: False)
+        self.info = solara.reactive(self.get_info(), equals=lambda x, y: False)
 
     def step(self):
         agents_list = self.agents_by_type.copy()
-        for _, v in agents_list.items(): v.do("step")
+        for _, v in agents_list.items():
+            v.do("step")
         self.info.set(self.get_info())
 
     def get_info(self):
