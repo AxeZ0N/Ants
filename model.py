@@ -3,6 +3,7 @@ Subclassing mesa.Model
 """
 
 import mesa
+import solara
 from mesa.discrete_space import OrthogonalMooreGrid
 
 
@@ -11,8 +12,8 @@ class Model(mesa.Model):
     Top level, holds and runs the sim
     """
 
-    def generate_test_state(self, *args):
-        """Plops out a model state"""
+    def _build_players(self, *args):
+        """Populates the model"""
         for player in args:
             player.create_agents(
                 self,
@@ -30,9 +31,14 @@ class Model(mesa.Model):
         )
 
         if players is not None:
-            self.generate_test_state(*players)
+            self._build_players(*players)
+
+        self.info = solara.reactive(self.get_info(), equals=lambda x,y: False)
 
     def step(self):
         agents_list = self.agents_by_type.copy()
-        for _, v in agents_list.items():
-            v.do("step")
+        for _, v in agents_list.items(): v.do("step")
+        self.info.set(self.get_info())
+
+    def get_info(self):
+        return self.agents_by_type

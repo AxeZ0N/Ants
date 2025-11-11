@@ -22,9 +22,10 @@ def agent_portrayal(agent):
 def agent_info(model_data):
     """Solara display fcn"""
     agents_by_type = model_data.info.value
-    for k,v in agents_by_type:
-        for ag in v:
-            solara.Info(f"{k.__name__}: {ag.storage}")
+    if type(agents_by_type) is dict: 
+        for k,v in agents_by_type.items():
+            for ag in v:
+                solara.Info(f"{k.__name__}: {ag.storage}")
 
 
 players = [
