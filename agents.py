@@ -4,7 +4,6 @@ Things that live in the model
 
 from mesa.discrete_space import CellAgent, FixedAgent
 
-
 class Ant(CellAgent):
     """
     Wander around until bumping into food
@@ -89,3 +88,4 @@ class Food(FixedAgent):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
+        self.storage = []

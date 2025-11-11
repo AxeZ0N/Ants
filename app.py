@@ -21,10 +21,10 @@ def agent_portrayal(agent):
 @solara.component()
 def agent_info(model_data):
     """Solara display fcn"""
-    ants = model_data.agents_by_type[agents.Ant]
-    if not ants:
-        return
-    solara.Info(f"Ants: {ants}")
+    agents_by_type = model_data.info.value
+    for k,v in agents_by_type:
+        for ag in v:
+            solara.Info(f"{k.__name__}: {ag.storage}")
 
 
 players = [
@@ -46,7 +46,7 @@ plot_comp = make_plot_component("encoding", page=1)
 space_renderer = SpaceRenderer(model=my_model, backend="matplotlib")
 renderer = space_renderer.render(agent_portrayal=agent_portrayal)
 
-comp = []
+comp = [agent_info]
 
 page = SolaraViz(
     my_model,
