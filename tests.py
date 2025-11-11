@@ -102,7 +102,9 @@ class TestAgent(unittest.TestCase):
 
 class TestAnt(unittest.TestCase):
     """Test ant specific agent stuff"""
-    ant_spawn = (4,4)
+
+    ant_spawn = (4, 4)
+
     def setUp(self):
         self.model = TestModel().setUp()
         self.ant_agent = agents.Ant(self.model, self.ant_spawn)
@@ -112,20 +114,21 @@ class TestAnt(unittest.TestCase):
 
     def test_history(self):
         """Ants remember where they've been"""
-        [self.model.step() for _ in range(3)]
+        for _ in range(3):
+            self.model.step()
         self.assertEqual(self.ant_agent.history[0].coordinate, self.ant_spawn)
 
         self.assertEqual(self.ant_agent.history[-1], self.ant_agent.cell)
 
     def showgrid(self):
-        print(self.ant_agent.cell.coordinate)
+        # print(self.ant_agent.cell.coordinate)
         for i in range(self.model.grid.width):
             for j in range(self.model.grid.height):
-                cell = self.model.grid[(i,j)]
+                cell = self.model.grid[(i, j)]
                 if len(cell.agents):
-                    print('x',end='')
+                    print("x", end="")
                 else:
-                    print('.',end='')
+                    print(".", end="")
             print()
 
     def test_prefer_new_cells(self):
@@ -135,15 +138,50 @@ class TestAnt(unittest.TestCase):
         If ants prefer new cells, there will be a point where there's no cells left unseen
         """
 
-        self.model = Model(1,10,)
-        self.ant_agent = agents.Ant(self.model, (0,0))
-        #self.ant_agent.is_test = True
+        self.model = Model(
+            1,
+            10,
+        )
+        self.ant_agent = agents.Ant(self.model, (0, 0))
+        # self.ant_agent.is_test = True
 
         for i in range(10):
             hx_len = len(self.ant_agent.history)
             self.assertEqual(hx_len, len(set(self.ant_agent.history)))
-            #self.showgrid()
+            # self.showgrid()
             self.model.step()
+
+    def test_prefer_food(self):
+        """Ants should try to move on top of food"""
+        self.ant_agent = agents.Ant(self.model, (3, 3))
+
+        food = agents.Food(self.model, (3, 4))
+
+        # self.ant_agent.is_test = True
+        self.model.step()
+
+        self.assertEqual(self.ant_agent.cell, food.cell)
+
+    def test_pick_up_food(self):
+        """Ants pick up food when they stand on it"""
+        self.model = Model(
+            1,
+            2,
+        )
+        self.ant_agent = agents.Ant(self.model, (0, 0))
+        food = agents.Food(self.model, (0, 1))
+        self.ant_agent.is_test = True
+
+        self.assertEqual(self.ant_agent.storage, [])
+
+        self.model.step()
+
+        self.assertEqual(self.ant_agent.cell, food.cell)
+
+        self.model.step()
+
+        self.assertEqual(self.ant_agent.storage, [food])
+
 
 
 unittest.main()

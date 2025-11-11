@@ -9,6 +9,7 @@ class Ant(CellAgent):
     """
     Wander around until bumping into food
     """
+
     is_test = False
 
     color, size = "red", 100
@@ -17,14 +18,40 @@ class Ant(CellAgent):
         super().__init__(model)
         self.cell = self.model.grid[coords]
         self.history = [self.cell]
+        self.storage = []
+
+    def _prune_next(self):
+        """Don't offer previously visited cells as options"""
+        next_step = [x for x in self.cell.get_neighborhood() if x not in self.history]
+        if not next_step:
+            next_step = list(self.cell.get_neighborhood())
+        return next_step
 
     def step(self):
-        next_step = [x for x in self.cell.get_neighborhood() if x not in self.history]
-        if self.model.grid.width == 1 and self.is_test:
-            print(f"I'm an ant, choosing from {len(next_step)} cells!")
-        if not len(next_step): next_step = list(self.cell.get_neighborhood())
-        self.cell = self.model.random.choice(next_step)
-        self.history.append(self.cell)
+        next_step = self._prune_next()
+        new = []
+        for cell in next_step:
+            for agent in cell.agents:
+                if issubclass(type(agent), Food):
+                    new.append(cell)
+                    continue
+
+        if new:
+            next_step = new
+        if not self._handle_standing_on():
+            if self.is_test:
+                print(f"I'm an ant, choosing from {len(next_step)} cells!")
+            self.cell = self.model.random.choice(next_step)
+            self.history.append(self.cell)
+
+    def _handle_standing_on(self):
+        for agent in self.cell.agents:
+            if issubclass(type(agent), Food):
+                self.storage.append(agent)
+                if self.is_test:
+                    print(f"I'm an ant, and I did an action!")
+                return 1
+        return 0
 
 
 class Hill(FixedAgent):
