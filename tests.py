@@ -183,5 +183,28 @@ class TestAnt(unittest.TestCase):
         self.assertEqual(self.ant_agent.storage, [food])
 
 
+    def test_drop_food(self):
+        """Ants drop any food at home when they touch it"""
+        self.model = Model(
+            1,
+            2,
+        )
+        self.ant_agent = agents.Ant(self.model, (0, 0))
+        food = agents.Food(self.model, (0, 0))
+        home = agents.Hill(self.model, (0, 1))
+        self.ant_agent.is_test = True
+
+        self.model.step()
+        self.showgrid()
+
+        self.assertEqual(self.ant_agent.storage, [food])
+
+        self.model.step()
+        self.model.step()
+
+        self.assertEqual(self.ant_agent.storage, [])
+        self.assertEqual(home.storage, [food])
+
+
 
 unittest.main()

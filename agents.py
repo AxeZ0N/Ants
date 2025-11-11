@@ -32,7 +32,11 @@ class Ant(CellAgent):
         new = []
         for cell in next_step:
             for agent in cell.agents:
-                if issubclass(type(agent), Food):
+                if issubclass(type(agent), Food) and not self.storage:
+                    new.append(cell)
+                    continue
+            for agent in cell.agents:
+                if issubclass(type(agent), Hill) and self.storage:
                     new.append(cell)
                     continue
 
@@ -45,12 +49,20 @@ class Ant(CellAgent):
             self.history.append(self.cell)
 
     def _handle_standing_on(self):
+        """Handles interactions with agents in the same cell"""
         for agent in self.cell.agents:
             if issubclass(type(agent), Food):
-                self.storage.append(agent)
-                if self.is_test:
-                    print(f"I'm an ant, and I did an action!")
-                return 1
+                if not self.storage: 
+                    self.storage.append(agent)
+                    if self.is_test:
+                        print(f"I'm an ant, and I grabbed some food!")
+                    return 1
+            if issubclass(type(agent), Hill):
+                if self.storage: 
+                    agent.storage.append(self.storage.pop())
+                    if self.is_test:
+                        print(f"I'm an ant, and I stored some food!")
+                    return 1
         return 0
 
 
@@ -64,6 +76,7 @@ class Hill(FixedAgent):
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
+        self.storage = []
 
 
 class Food(FixedAgent):
