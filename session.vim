@@ -8,8 +8,8 @@ nnoremap <silent>  :nohlsearch
 omap <silent> % <Plug>(MatchitOperationForward)
 xmap <silent> % <Plug>(MatchitVisualForward)
 nmap <silent> % <Plug>(MatchitNormalForward)
-nmap Q gq
 xmap Q gq
+nmap Q gq
 omap Q gq
 vmap Y "+y
 nnoremap ZZ :wqa
@@ -93,7 +93,7 @@ let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd /media/k/General/Ryan/Desktop/Other/Code/Fun/ants_and_tests
+cd /media/k/General/Ryan/Desktop/Other/Code/Fun/Various_Ant_Sims/ants_and_tests
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
@@ -103,9 +103,9 @@ else
   set shortmess=aoO
 endif
 badd +1 agents.py
-badd +0 app.py
-badd +0 model.py
-badd +0 tests.py
+badd +1 app.py
+badd +1 model.py
+badd +1 tests.py
 argglobal
 %argdel
 $argadd agents.py
@@ -252,12 +252,12 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 46 - ((45 * winheight(0) + 39) / 78)
+let s:l = 36 - ((5 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 46
-normal! 0
+keepjumps 36
+normal! 09|
 tabnext
 edit agents.py
 argglobal
@@ -393,7 +393,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 28 - ((27 * winheight(0) + 39) / 78)
+let s:l = 28 - ((8 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
@@ -535,7 +535,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 18 - ((17 * winheight(0) + 39) / 78)
+let s:l = 18 - ((5 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
@@ -677,7 +677,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 16 - ((15 * winheight(0) + 39) / 78)
+let s:l = 16 - ((4 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt

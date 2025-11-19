@@ -30,8 +30,8 @@ def agent_info(model_data):
 
 players = [
     agents.Ant,
-    agents.Ant,
-    agents.Ant,
+    # agents.Ant,
+    # agents.Ant,
     agents.Hill,
     agents.Food,
 ]
