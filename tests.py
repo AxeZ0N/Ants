@@ -199,11 +199,9 @@ class TestAnt(unittest.TestCase):
         self.ant_agent.is_test = True
 
         self.model.step()
-        self.showgrid()
 
         self.assertEqual(self.ant_agent.storage, [food])
 
-        self.model.step()
         self.model.step()
 
         self.assertEqual(self.ant_agent.storage, [])

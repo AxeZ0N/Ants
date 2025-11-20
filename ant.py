@@ -16,10 +16,17 @@ class Ant(CellAgent):
         self.history = [self.cell]
         self.storage = []
         self.ant_brain = AntBrain
+        self.state = 'WANDER'
 
     def step(self):
         """Ants do various things depending on state and position each step."""
         #used_turn = self.AntBrain.handle_curr_cell(self)
+
+        # Step 1: Dispatch based on state
+        move_fcn = None
+        match self.state:
+            case "WANDER": move_fcn = self.ant_brain.wander
+            case "HOLDING": move_fcn = self.ant_brain.holding
 
         next_step = self.ant_brain.prune_next(self)
         new = []
@@ -35,10 +42,6 @@ class Ant(CellAgent):
 
         if new:
             next_step = new
-        if not self.ant_brain.handle_standing_on(self):
-            if self.is_test:
-                self.plot_history()
-                print(f"I'm an ant, choosing from {len(next_step)} cells!")
             self.cell = self.model.random.choice(next_step)
             self.history.append(self.cell)
 
@@ -46,6 +49,11 @@ class Ant(CellAgent):
             self.color = "brown"
         else:
             self.color = "red"
+
+        self.state = self.update_state()
+
+    def update_state(self):
+        return "WANDER" if not self.state else "HOLDING"
 
     def plot_history(self):
         Smell(self.model, self.cell.coordinate)
@@ -68,37 +76,6 @@ class AntBrain:
         # print(my_dict)
 
     @staticmethod
-    def handle_standing_on(ant):
-        """Handles interactions with agents in the same cell"""
-        self = ant
-
-        def erase_hx():
-            for cell in self.history:
-                for agent in cell.agents:
-                    if isinstance(agent, Smell):
-                        agent.lifetime = 0
-                        print("SMELL")
-                        break
-
-            self.history = []
-
-        for agent in self.cell.agents:
-            if issubclass(type(agent), Food):
-                if not self.storage:
-                    self.storage.append(agent)
-                    if self.is_test:
-                        print("I'm an ant, and I grabbed some food!")
-                    return 1
-            if issubclass(type(agent), Hill):
-                if self.storage:
-                    agent.storage.append(self.storage.pop())
-                    erase_hx()
-                    if self.is_test:
-                        print("I'm an ant, and I stored some food!")
-                    return 1
-        return 0
-
-    @staticmethod
     def prune_next(ant):
         """Don't offer previously visited cells as options"""
         self = ant
@@ -106,3 +83,12 @@ class AntBrain:
         if not next_step:
             next_step = list(self.cell.get_neighborhood())
         return next_step
+
+
+    @staticmethod
+    def wander(ant):
+        pass
+
+    @staticmethod
+    def holding(ant):
+        pass
