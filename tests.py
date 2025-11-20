@@ -58,6 +58,7 @@ class TestAgent(unittest.TestCase):
         "Agent",
         "CellAgent",
         "FixedAgent",
+        "AntBrain",
     ]
 
     def _get_agents_list(self):
@@ -222,29 +223,29 @@ class TestNavigation(unittest.TestCase):
         points = []
         for i in range(3):
             for j in range(3):
-                points.append((i,j))
+                points.append((i, j))
 
         def get_avg(points):
-            xavg,yavg = 0,0
-            for x,y in points:
+            xavg, yavg = 0, 0
+            for x, y in points:
                 xavg += x
                 yavg += y
 
-            avg_pt = xavg/len(points), yavg/len(points)
+            avg_pt = xavg / len(points), yavg / len(points)
             return avg_pt
 
         def angle_between(p1, p2):
-            dx = p2[0]-p1[0]
-            dy = p2[1]-p1[1]
+            dx = p2[0] - p1[0]
+            dy = p2[1] - p1[1]
 
-            angle = np.atan2(dy,dx)
+            angle = np.atan2(dy, dx)
             return np.rad2deg(angle)
 
         for _ in range(10):
             self.model.step()
             avg = get_avg([x.coordinate for x in self.ant_agent.history])
             ant_pos = self.ant_agent.cell.coordinate
-            angle = angle_between(ant_pos,avg)
+            angle = angle_between(ant_pos, avg)
             print(f"Angle from ant {ant_pos} to avg history {avg}: {angle}")
 
 
