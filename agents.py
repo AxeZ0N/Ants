@@ -62,7 +62,7 @@ class Smell(FixedAgent):
         super().__init__(model)
         self.cell = self.model.grid[coords]
         self.storage = []
-        self.lifetime = kwargs.get("lifetime", 3)
+        self.lifetime = kwargs.get("lifetime", 8888)
 
     def step(self):
         if self.lifetime <= 0:
@@ -101,6 +101,12 @@ class __AntBrain__:
             if issubclass(type(agent), Hill):
                 if self.storage:
                     agent.storage.append(self.storage.pop())
+                    for cell in self.history:
+                        for agent in cell.agents:
+                            if isinstance(agent, Smell):
+                                agent.lifetime = 0
+                                print("SMELL")
+                    self.history = []
                     if self.is_test:
                         print("I'm an ant, and I stored some food!")
                     return 1
