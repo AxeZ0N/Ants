@@ -10,9 +10,10 @@ import numpy as np
 from mesa import Model as Model_Class
 from mesa.discrete_space import Cell, CellAgent, FixedAgent, OrthogonalMooreGrid
 
-from model import Model
+from model_app import Model
 
 import agents
+from ant import Ant, AntBrain
 
 
 class MakeTestObj:
@@ -111,7 +112,7 @@ class TestAnt(unittest.TestCase):
 
     def setUp(self):
         self.model = TestModel().setUp()
-        self.ant_agent = agents.Ant(self.model, self.ant_spawn)
+        self.ant_agent = Ant(self.model, self.ant_spawn)
 
     def tearDown(self):
         del self.model
@@ -146,7 +147,7 @@ class TestAnt(unittest.TestCase):
             1,
             10,
         )
-        self.ant_agent = agents.Ant(self.model, (0, 0))
+        self.ant_agent = Ant(self.model, (0, 0))
         # self.ant_agent.is_test = True
 
         for i in range(10):
@@ -157,7 +158,7 @@ class TestAnt(unittest.TestCase):
 
     def test_prefer_food(self):
         """Ants should try to move on top of food"""
-        self.ant_agent = agents.Ant(self.model, (3, 3))
+        self.ant_agent = Ant(self.model, (3, 3))
 
         food = agents.Food(self.model, (3, 4))
 
@@ -172,7 +173,7 @@ class TestAnt(unittest.TestCase):
             1,
             2,
         )
-        self.ant_agent = agents.Ant(self.model, (0, 0))
+        self.ant_agent = Ant(self.model, (0, 0))
         food = agents.Food(self.model, (0, 1))
         self.ant_agent.is_test = True
 
@@ -192,7 +193,7 @@ class TestAnt(unittest.TestCase):
             1,
             2,
         )
-        self.ant_agent = agents.Ant(self.model, (0, 0))
+        self.ant_agent = Ant(self.model, (0, 0))
         food = agents.Food(self.model, (0, 0))
         home = agents.Hill(self.model, (0, 1))
         self.ant_agent.is_test = True
@@ -214,7 +215,7 @@ class TestNavigation(unittest.TestCase):
 
     def setUp(self):
         self.model = TestModel().setUp()
-        self.ant_agent = agents.Ant(self.model, self.ant_spawn)
+        self.ant_agent = Ant(self.model, self.ant_spawn)
 
     def tearDown(self):
         del self.model
@@ -248,5 +249,29 @@ class TestNavigation(unittest.TestCase):
             angle = angle_between(ant_pos, avg)
             print(f"Angle from ant {ant_pos} to avg history {avg}: {angle}")
 
+    def test_ant_retrace_steps(self):
+        ant = self.ant_agent
+        ant.cell = self.model.grid[(9,0)]
+        ant.history = []
+        for i in range(10):
+            ant.history.append(self.model.grid[(i,0)])
+
+        home = agents.Hill(self.model, (0,0))
+
+        food = agents.Food(self.model, (9,0))
+
+        print(ant.history)
+        print(ant.cell.coordinate)
+
+    def showgrid(self):
+        # print(self.ant_agent.cell.coordinate)
+        for i in range(self.model.grid.width):
+            for j in range(self.model.grid.height):
+                cell = self.model.grid[(i, j)]
+                if len(cell.agents):
+                    print("x", end="")
+                else:
+                    print(".", end="")
+            print()
 
 unittest.main()
