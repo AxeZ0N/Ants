@@ -2,6 +2,8 @@
 Silly little tests
 """
 
+import pdb
+
 import unittest
 import math
 
@@ -121,6 +123,7 @@ class TestAnt(unittest.TestCase):
         """Ants remember where they've been"""
         for _ in range(3):
             self.model.step()
+            print(self.ant_agent.history)
         self.assertEqual(self.ant_agent.history[0].coordinate, self.ant_spawn)
 
         self.assertEqual(self.ant_agent.history[-1], self.ant_agent.cell)
@@ -163,7 +166,11 @@ class TestAnt(unittest.TestCase):
         food = agents.Food(self.model, (3, 4))
 
         # self.ant_agent.is_test = True
+        print(f"PREFER_FOOD")
+        print(f"PREFER_FOOD")
         self.model.step()
+        print(f"PREFER_FOOD")
+        print(f"PREFER_FOOD")
 
         self.assertEqual(self.ant_agent.cell, food.cell)
 
@@ -198,6 +205,7 @@ class TestAnt(unittest.TestCase):
         home = agents.Hill(self.model, (0, 1))
         self.ant_agent.is_test = True
 
+        self.model.step()
         self.model.step()
 
         self.assertEqual(self.ant_agent.storage, [food])
@@ -249,14 +257,14 @@ class TestNavigation(unittest.TestCase):
 
     def test_ant_retrace_steps(self):
         ant = self.ant_agent
-        ant.cell = self.model.grid[(9,0)]
+        ant.cell = self.model.grid[(9, 0)]
         ant.history = []
         for i in range(10):
-            ant.history.append(self.model.grid[(i,0)])
+            ant.history.append(self.model.grid[(i, 0)])
 
-        home = agents.Hill(self.model, (0,0))
+        home = agents.Hill(self.model, (0, 0))
 
-        food = agents.Food(self.model, (9,0))
+        food = agents.Food(self.model, (9, 0))
 
         print(ant.history)
         print(ant.cell.coordinate)
@@ -271,5 +279,6 @@ class TestNavigation(unittest.TestCase):
                 else:
                     print(".", end="")
             print()
+
 
 unittest.main()

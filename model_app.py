@@ -14,6 +14,7 @@ from mesa.visualization.components import AgentPortrayalStyle
 
 import agents, ant
 
+
 class Model(mesa.Model):
     """
     Top level, holds and runs the sim

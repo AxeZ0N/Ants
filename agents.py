@@ -7,6 +7,7 @@ from mesa.discrete_space import CellAgent, FixedAgent
 
 class Smell(FixedAgent):
     """Places where an ant has stepped"""
+
     color, size = "green", 40
 
     def __init__(self, model, coords, **kwargs):
@@ -20,6 +21,7 @@ class Smell(FixedAgent):
             self.remove()
         else:
             self.lifetime -= 1
+
 
 class Hill(FixedAgent):
     """
@@ -35,8 +37,9 @@ class Hill(FixedAgent):
 
     def step(self):
         for agent in self.cell.agents:
-            #print('foobar')
+            # print('foobar')
             if type(agent).__name__ == "Ant":
+                print("DROPPING FOOD")
                 if agent.storage:
                     self.storage.append(agent.storage.pop())
 
@@ -63,11 +66,13 @@ class Food(FixedAgent):
         return ant
 
         self.history = []
+
     def step(self):
         for agent in self.cell.agents:
-            #print('foobar')
+            # print('foobar')
             if type(agent).__name__ == "Ant":
                 if not agent.storage:
+                    print("PUSHING FOOD")
                     agent.storage.append(self)
                     agent = self.erase_hx(agent)
                     agent.history = [self.cell]

@@ -1,6 +1,7 @@
 from mesa.discrete_space import CellAgent, FixedAgent
 from agents import Food, Hill, Smell
 
+
 class Ant(CellAgent):
     """
     Wander around until bumping into food
@@ -16,48 +17,41 @@ class Ant(CellAgent):
         self.history = [self.cell]
         self.storage = []
         self.ant_brain = AntBrain
-        self.state = 'WANDER'
+        self.state = "WANDER"
 
     def step(self):
         """Ants do various things depending on state and position each step."""
-        #used_turn = self.AntBrain.handle_curr_cell(self)
+        # used_turn = self.AntBrain.handle_curr_cell(self)
 
         # Step 1: Dispatch based on state
         move_fcn = None
         match self.state:
-            case "WANDER": move_fcn = self.ant_brain.wander
-            case "HOLDING": move_fcn = self.ant_brain.holding
+            case "WANDER":
+                move_fcn = self.ant_brain.wander
+            case "HOLDING":
+                move_fcn = self.ant_brain.holding
+            case _: pass
 
-        next_step = self.ant_brain.prune_next(self)
-        new = []
-        for cell in next_step:
-            for agent in cell.agents:
-                if issubclass(type(agent), Food) and not self.storage:
-                    new.append(cell)
-                    continue
-            for agent in cell.agents:
-                if issubclass(type(agent), Hill) and self.storage:
-                    new.append(cell)
-                    continue
+        # Step 2: Update hx and pos
+        self.cell = move_fcn(self)
+        self.history.append(self.cell)
 
-        if new:
-            next_step = new
-            self.cell = self.model.random.choice(next_step)
-            self.history.append(self.cell)
+        # Step 3: Update state dependants
+        self.state = self._update_state()
+        self.color = self._update_color()
 
-        if self.storage:
-            self.color = "brown"
-        else:
-            self.color = "red"
+    def _update_color(self):
+        match self.state:
+            case "WANDER":
+                return "red"
+            case "HOLDING":
+                return "brown"
 
-        self.state = self.update_state()
-
-    def update_state(self):
+    def _update_state(self):
         return "WANDER" if not self.state else "HOLDING"
 
     def plot_history(self):
         Smell(self.model, self.cell.coordinate)
-
 
 
 class AntBrain:
@@ -84,11 +78,26 @@ class AntBrain:
             next_step = list(self.cell.get_neighborhood())
         return next_step
 
+    @staticmethod
+    def aim_for(ant, target):
+        nbrs = list(ant.cell.get_neighborhood())
+        cells = []
+        for cell in nbrs:
+            for agent in cell.agents:
+                if isinstance(agent, target):
+                    cells.append(cell)
+                    break
+
+        if cells:
+            return cells.pop()
+
+        poss_next = AntBrain.prune_next(ant)
+        return ant.model.random.choice(poss_next)
 
     @staticmethod
     def wander(ant):
-        pass
+        return AntBrain.aim_for(ant, Food)
 
     @staticmethod
     def holding(ant):
-        pass
+        return AntBrain.aim_for(ant, Hill)
