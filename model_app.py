@@ -50,6 +50,7 @@ class Model(mesa.Model):
         self.info.set(self.get_info())
 
     def get_info(self):
+        """Used by solara viz"""
         return self.agents_by_type
 
 
@@ -70,7 +71,7 @@ def agent_info(model_data):
             for ag in v:
                 solara.Info(f"{k.__name__}: {ag.storage}")
 
-
+# Mostly boilerplate from mesa basic tutorial
 players = [
     ant.Ant,
     # agents.Ant,
@@ -101,3 +102,4 @@ page = SolaraViz(
     model_params=model_params,
     name="Ants with tests!",
 )
+# Mostly boilerplate from mesa basic tutorial

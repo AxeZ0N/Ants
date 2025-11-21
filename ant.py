@@ -11,13 +11,16 @@ class Ant(CellAgent):
 
     color, size = "red", 100
 
+    # States
+    WANDER, HOLDING = "WANDER", "HOLDING"
+
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
         self.history = [self.cell]
         self.storage = []
         self.ant_brain = AntBrain
-        self.state = "WANDER"
+        self.state = self.WANDER
 
     def step(self):
         """Ants do various things depending on state and position each step."""
@@ -30,7 +33,8 @@ class Ant(CellAgent):
                 move_fcn = self.ant_brain.wander
             case "HOLDING":
                 move_fcn = self.ant_brain.holding
-            case _: pass
+            case _:
+                pass
 
         # Step 2: Update hx and pos
         self.cell = move_fcn(self)
@@ -41,63 +45,48 @@ class Ant(CellAgent):
         self.color = self._update_color()
 
     def _update_color(self):
+        """Internal"""
         match self.state:
-            case "WANDER":
+            case self.WANDER:
                 return "red"
-            case "HOLDING":
+            case self.HOLDING:
                 return "brown"
 
     def _update_state(self):
-        return "WANDER" if not self.state else "HOLDING"
+        """Internal"""
+        return self.HOLDING if self.storage else self.WANDER
 
     def plot_history(self):
+        """Place Smell in curr cell"""
         Smell(self.model, self.cell.coordinate)
 
 
 class AntBrain:
-    @staticmethod
-    def handle_curr_cell(ant):
-        self = ant
-        if self.storage:
-            ret = self.ant_brain.handle_with_food(self)
-
-        keys = [type(agent) for agent in self.cell.agents]
-
-        my_dict = {k: [] for k in keys}
-
-        {my_dict[type(agent)].append(agent) for agent in self.cell.agents}
-
-        # print(my_dict)
+    """This is where most decisions about movement are made"""
 
     @staticmethod
     def prune_next(ant):
         """Don't offer previously visited cells as options"""
-        self = ant
-        next_step = [x for x in self.cell.get_neighborhood() if x not in self.history]
-        if not next_step:
-            next_step = list(self.cell.get_neighborhood())
-        return next_step
+        nbrs = ant.cell.get_neighborhood()
+        poss_next = [x for x in nbrs if x not in ant.history]
+        return poss_next if poss_next else list(nbrs)
 
     @staticmethod
     def aim_for(ant, target):
-        nbrs = list(ant.cell.get_neighborhood())
-        cells = []
-        for cell in nbrs:
+        """Return cell if avail"""
+        for cell in ant.cell.get_neighborhood():
             for agent in cell.agents:
                 if isinstance(agent, target):
-                    cells.append(cell)
-                    break
+                    return cell
 
-        if cells:
-            return cells.pop()
-
-        poss_next = AntBrain.prune_next(ant)
-        return ant.model.random.choice(poss_next)
+        return ant.model.random.choice(AntBrain.prune_next(ant))
 
     @staticmethod
     def wander(ant):
+        """Return Food if avail"""
         return AntBrain.aim_for(ant, Food)
 
     @staticmethod
     def holding(ant):
+        """Return Hill if avail"""
         return AntBrain.aim_for(ant, Hill)

@@ -166,11 +166,7 @@ class TestAnt(unittest.TestCase):
         food = agents.Food(self.model, (3, 4))
 
         # self.ant_agent.is_test = True
-        print(f"PREFER_FOOD")
-        print(f"PREFER_FOOD")
         self.model.step()
-        print(f"PREFER_FOOD")
-        print(f"PREFER_FOOD")
 
         self.assertEqual(self.ant_agent.cell, food.cell)
 

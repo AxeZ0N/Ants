@@ -17,10 +17,10 @@ class Smell(FixedAgent):
         self.lifetime = kwargs.get("lifetime", 8888)
 
     def step(self):
-        if self.lifetime <= 0:
-            self.remove()
-        else:
+        if self.lifetime > 0:
             self.lifetime -= 1
+        else:
+            self.remove()
 
 
 class Hill(FixedAgent):
@@ -35,13 +35,14 @@ class Hill(FixedAgent):
         self.cell = self.model.grid[coords]
         self.storage = []
 
-    def step(self):
+    def _suck_food(self):
+        """Remove and store food from any ant that crosses"""
         for agent in self.cell.agents:
-            # print('foobar')
-            if type(agent).__name__ == "Ant":
-                print("DROPPING FOOD")
-                if agent.storage:
-                    self.storage.append(agent.storage.pop())
+            if type(agent).__name__ == "Ant" and agent.storage:
+                self.storage.append(agent.storage.pop())
+
+    def step(self):
+        self._suck_food()
 
 
 class Food(FixedAgent):
@@ -56,23 +57,18 @@ class Food(FixedAgent):
         self.cell = self.model.grid[coords]
         self.storage = []
 
-    def erase_hx(self, ant):
+    def _clear_scent(self, ant):
+        """Declutter the screen of scent markers"""
         for cell in ant.history:
-
             for agent in cell.agents:
                 if isinstance(agent, Smell):
                     agent.lifetime = 0
-                    return ant
-        return ant
 
-        self.history = []
 
     def step(self):
         for agent in self.cell.agents:
-            # print('foobar')
             if type(agent).__name__ == "Ant":
                 if not agent.storage:
-                    print("PUSHING FOOD")
                     agent.storage.append(self)
-                    agent = self.erase_hx(agent)
-                    agent.history = [self.cell]
+                    self._clear_scent(agent)
+                    # agent.history = [self.cell] # Can erase ant history if needed
