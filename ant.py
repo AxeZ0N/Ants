@@ -1,4 +1,6 @@
-from mesa.discrete_space import CellAgent, FixedAgent
+"""Ants are the main part of the sim"""
+
+from mesa.discrete_space import CellAgent
 from agents import Food, Hill, Smell
 
 
@@ -43,6 +45,8 @@ class Ant(CellAgent):
         # Step 3: Update state dependants
         self.state = self._update_state()
         self.color = self._update_color()
+        if self.is_test:
+            self.plot_history()
 
     def _update_color(self):
         """Internal"""

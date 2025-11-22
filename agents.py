@@ -8,7 +8,7 @@ from mesa.discrete_space import CellAgent, FixedAgent
 class Smell(FixedAgent):
     """Places where an ant has stepped"""
 
-    color, size = "green", 40
+    color, size = "white", 1
 
     def __init__(self, model, coords, **kwargs):
         super().__init__(model)
@@ -63,7 +63,6 @@ class Food(FixedAgent):
             for agent in cell.agents:
                 if isinstance(agent, Smell):
                     agent.lifetime = 0
-
 
     def step(self):
         for agent in self.cell.agents:

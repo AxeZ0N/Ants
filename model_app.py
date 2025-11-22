@@ -6,9 +6,6 @@ Serves the Solara server my model
 import mesa
 import solara
 from mesa.discrete_space import OrthogonalMooreGrid
-
-
-import solara
 from mesa.visualization import SolaraViz, SpaceRenderer, make_plot_component
 from mesa.visualization.components import AgentPortrayalStyle
 
@@ -70,6 +67,7 @@ def agent_info(model_data):
         for k, v in agents_by_type.items():
             for ag in v:
                 solara.Info(f"{k.__name__}: {ag.storage}")
+
 
 # Mostly boilerplate from mesa basic tutorial
 players = [
