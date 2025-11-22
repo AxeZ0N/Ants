@@ -51,12 +51,29 @@ class Model(mesa.Model):
         return self.agents_by_type
 
 
+
+toggle_states = [True, False]
+curr_toggle_state = solara.reactive(False)
+
 def agent_portrayal(agent):
     """Solara helper fcn"""
+    if issubclass(type(agent), agents.Smell):
+        if not curr_toggle_state:
+            size, color = 1, "white"
+
+    size, color = agent.size, agent.color
+
     return AgentPortrayalStyle(
-        size=agent.size,
-        color=agent.color,
-    )
+            size = size,
+            color = color
+            )
+
+@solara.component()
+def toggle_smells(model_data):
+    solara.ToggleButtonsSingle(
+            value = curr_toggle_state,
+            values = toggle_states,
+            )
 
 
 @solara.component()
@@ -91,7 +108,7 @@ plot_comp = make_plot_component("encoding", page=1)
 space_renderer = SpaceRenderer(model=my_model, backend="matplotlib")
 renderer = space_renderer.render(agent_portrayal=agent_portrayal)
 
-comp = [agent_info]
+comp = [agent_info, toggle_smells]
 
 page = SolaraViz(
     my_model,
