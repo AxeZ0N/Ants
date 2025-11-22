@@ -58,7 +58,7 @@ curr_toggle_state = solara.reactive(False)
 def agent_portrayal(agent):
     """Solara helper fcn"""
     if issubclass(type(agent), agents.Smell):
-        if not curr_toggle_state:
+        if not curr_toggle_state.value:
             size, color = 1, "white"
 
     size, color = agent.size, agent.color
