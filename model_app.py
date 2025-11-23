@@ -51,29 +51,40 @@ class Model(mesa.Model):
         return self.agents_by_type
 
 
-
 toggle_states = [True, False]
 curr_toggle_state = solara.reactive(False)
 
+
 def agent_portrayal(agent):
     """Solara helper fcn"""
-    if issubclass(type(agent), agents.Smell):
-        if not curr_toggle_state.value:
-            size, color = 1, "white"
 
     size, color = agent.size, agent.color
 
-    return AgentPortrayalStyle(
-            size = size,
-            color = color
-            )
+    return AgentPortrayalStyle(size=size, color=color)
+
 
 @solara.component()
 def toggle_smells(model_data):
+
+    def update_smell_display_callback(value):
+        my_agents = model_data.agents_by_type
+
+        if not value:
+            size, color = 1, "white"
+        else:
+            size, color = 10, "green"
+
+        agents.Smell.size, agents.Smell.color = size, color
+
+        if agents.Smell in my_agents.keys():
+            for agent in my_agents[agents.Smell]:
+                agent.update_display(color, size)
+
     solara.ToggleButtonsSingle(
-            value = curr_toggle_state,
-            values = toggle_states,
-            )
+        value=curr_toggle_state,
+        values=toggle_states,
+        on_value=update_smell_display_callback,
+    )
 
 
 @solara.component()

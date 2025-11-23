@@ -22,6 +22,9 @@ class Smell(FixedAgent):
         else:
             self.remove()
 
+    def update_display(self, color, size):
+        self.color, self.size = color, size
+
 
 class Hill(FixedAgent):
     """
