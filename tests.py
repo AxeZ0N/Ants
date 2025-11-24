@@ -37,7 +37,8 @@ class TestModel(unittest.TestCase):
     """Basic inits and such"""
 
     def setUp(self):
-        self.model = MakeTestObj().model(model=Model)
+        kwargs = {"width": 10, "height": 10, "seed": 1}
+        self.model = MakeTestObj().model(model=Model, **kwargs)
         return self.model
 
     def tearDown(self):
@@ -124,7 +125,7 @@ class TestAnt(unittest.TestCase):
         """Ants remember where they've been"""
         for _ in range(3):
             self.model.step()
-            print(self.ant_agent.history)
+            # print(self.ant_agent.history)
         self.assertEqual(self.ant_agent.history[0].coordinate, self.ant_spawn)
 
         self.assertEqual(self.ant_agent.history[-1], self.ant_agent.cell)
@@ -148,8 +149,9 @@ class TestAnt(unittest.TestCase):
         """
 
         self.model = Model(
-            1,
-            10,
+                width = 1,
+                height = 10,
+                seed = 1,
         )
         self.ant_agent = Ant(self.model, (0, 0))
         # self.ant_agent.is_test = True
@@ -174,8 +176,9 @@ class TestAnt(unittest.TestCase):
     def test_pick_up_food(self):
         """Ants pick up food when they stand on it"""
         self.model = Model(
-            1,
-            2,
+                width = 1,
+                height = 2,
+                seed = 1,
         )
         self.ant_agent = Ant(self.model, (0, 0))
         food = agents.Food(self.model, (0, 1))
@@ -194,8 +197,9 @@ class TestAnt(unittest.TestCase):
     def test_drop_food(self):
         """Ants drop any food at home when they touch it"""
         self.model = Model(
-            1,
-            2,
+                width = 1,
+                height = 2,
+                seed = 1,
         )
         self.ant_agent = Ant(self.model, (0, 0))
         food = agents.Food(self.model, (0, 0))
@@ -250,11 +254,15 @@ class TestNavigation(unittest.TestCase):
             avg = get_avg([x.coordinate for x in self.ant_agent.history])
             ant_pos = self.ant_agent.cell.coordinate
             angle = angle_between(ant_pos, avg)
-            print(f"Angle from ant {ant_pos} to avg history {avg}: {angle}")
+            #print(f"Angle from ant {ant_pos} to avg history {avg}: {angle}")
 
     def test_ant_retrace_steps(self):
         ant = self.ant_agent
+
+        ant.state = ant.HOLDING
+        ant.storage = [agents.Food(self.model, ant.cell.coordinate)]
         ant.cell = self.model.grid[(9, 0)]
+
         ant.history = []
         for i in range(10):
             ant.history.append(self.model.grid[(i, 0)])
@@ -263,8 +271,12 @@ class TestNavigation(unittest.TestCase):
 
         food = agents.Food(self.model, (9, 0))
 
-        print(ant.history)
-        print(ant.cell.coordinate)
+        can_go_home = ant.ant_brain.can_go_home(ant)
+        print("Can go home?")
+        print(can_go_home)
+
+        #print(ant.history)
+        #print(ant.cell.coordinate)
 
     def showgrid(self):
         # print(self.ant_agent.cell.coordinate)

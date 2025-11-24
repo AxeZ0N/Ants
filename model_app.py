@@ -26,7 +26,7 @@ class Model(mesa.Model):
                 self.grid.empties.select_random_cell().coordinate,
             )
 
-    def __init__(self, width=10, height=10, seed=1, players=None):
+    def __init__(self, width, height, seed, players=None):
 
         super().__init__(seed=seed)
 
@@ -106,14 +106,15 @@ players = [
     agents.Food,
 ]
 
-my_model = Model(players=players)
 
 model_params = {
-    "width": 10,
-    "height": 10,
+    "width": 40,
+    "height": 40,
     "seed": 1,
     "players": players,
 }
+
+my_model = Model(**model_params)
 
 plot_comp = make_plot_component("encoding", page=1)
 space_renderer = SpaceRenderer(model=my_model, backend="matplotlib")

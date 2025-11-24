@@ -75,6 +75,54 @@ class AntBrain:
         poss_next = [x for x in nbrs if x not in ant.history]
         return poss_next if poss_next else list(nbrs)
 
+    # Process:
+    # Ant tries to walk home.
+    # case: Ant has home in history.
+    #   Ant looks around and chooses any cell such that
+    #       cell in direction of home
+    #       cell contains Smell obj
+    # case: Ant doesn't have home in history.
+    #   Undefined
+    # case: Ant has no smells around.
+    #   Undefined
+
+    @staticmethod
+    def can_go_home(ant):
+        """ """
+        return [
+                cell
+                for cell in ant.history
+                for agent in cell.agents
+                if isinstance(agent, Hill)
+                ]
+
+    @staticmethod
+    def get_smell_nbrs(ant):
+        """ """
+        return [
+                cell
+                for cell in ant.cell.get_neighborhood()
+                for agent in cell.agents
+                if isinstance(agent, Smell)
+                ]
+
+    @staticmethod
+    def _select_cells(possible, validation_fcn):
+        return [
+                cell
+                for cell in possible
+                if validation_fcn(cell)
+                ]
+
+    @staticmethod
+    def prune_next(ant):
+        valid = lambda cell: cell in ant.history
+        possible = ant.cell.get_neighborhood()
+
+        next_step = AntBrain._select_cells(possible, valid)
+        
+        return next_step if next_step else possible
+
     @staticmethod
     def aim_for(ant, target):
         """Return cell if avail"""
