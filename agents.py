@@ -43,6 +43,8 @@ class Hill(FixedAgent):
         for agent in self.cell.agents:
             if type(agent).__name__ == "Ant" and agent.storage:
                 self.storage.append(agent.storage.pop())
+                agent.state = agent.FOLLOW
+                agent.follow_path = list(reversed(agent.hx_copy.copy()))
 
     def step(self):
         self._suck_food()

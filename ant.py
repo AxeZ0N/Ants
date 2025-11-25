@@ -29,19 +29,19 @@ class Ant(CellAgent):
         # used_turn = self.AntBrain.handle_curr_cell(self)
 
         # Step 1: Dispatch based on state
-        # Step 2: Update hx and pos
         move_fcn = None
         match self.state:
             case "WANDER":
-                self.cell = self.ant_brain.wander(self)
-                self.history.append(self.cell)
+                move_fcn = self.ant_brain.wander
             case "HOLDING":
-                self.cell = self.ant_brain.holding(self)
-                self.hx_copy = self.history.copy()
-                self.history.pop(-1)
+                move_fcn = self.ant_brain.holding
             case _:
                 pass
 
+        # Step 2: Update hx and pos
+        self.cell = move_fcn(self)
+        #print(f"New cell: {self.cell}")
+        self.history.append(self.cell)
 
         # Step 3: Update state dependants
         self.state = self._update_state()
