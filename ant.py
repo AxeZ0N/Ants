@@ -29,18 +29,19 @@ class Ant(CellAgent):
         # used_turn = self.AntBrain.handle_curr_cell(self)
 
         # Step 1: Dispatch based on state
+        # Step 2: Update hx and pos
         move_fcn = None
         match self.state:
             case "WANDER":
-                move_fcn = self.ant_brain.wander
+                self.cell = self.ant_brain.wander(self)
+                self.history.append(self.cell)
             case "HOLDING":
-                move_fcn = self.ant_brain.holding
+                self.cell = self.ant_brain.holding(self)
+                self.hx_copy = self.history.copy()
+                self.history.pop(-1)
             case _:
                 pass
 
-        # Step 2: Update hx and pos
-        self.cell = move_fcn(self)
-        self.history.append(self.cell)
 
         # Step 3: Update state dependants
         self.state = self._update_state()
@@ -66,13 +67,6 @@ class Ant(CellAgent):
 
 class AntBrain:
     """This is where most decisions about movement are made"""
-
-    @staticmethod
-    def prune_next(ant):
-        """Don't offer previously visited cells as options"""
-        nbrs = ant.cell.get_neighborhood()
-        poss_next = [x for x in nbrs if x not in ant.history]
-        return poss_next if poss_next else list(nbrs)
 
     # Process:
     # Ant tries to walk home.
@@ -106,47 +100,46 @@ class AntBrain:
                 ]
 
     @staticmethod
-    def _select_cells(possible, validation_fcn):
+    def _select_cells(base_set, validation_fcn):
         return [
                 cell
-                for cell in possible
+                for cell in base_set
                 if validation_fcn(cell)
                 ]
 
     @staticmethod
     def go_home(ant):
         valid = lambda cell: cell in ant.history
-        possible = ant.cell.get_neighborhood()
+        base_set = ant.cell.get_neighborhood()
 
-        next_step = AntBrain._select_cells(possible, valid)
+        next_step = AntBrain._select_cells(base_set, valid)
         
-        return next_step if next_step else list(possible)
-
-    @staticmethod
-    def prune_next(ant):
-        valid = lambda cell: cell not in ant.history
-        possible = ant.cell.get_neighborhood()
-
-        next_step = AntBrain._select_cells(possible, valid)
-        
-        return next_step if next_step else list(possible)
-
-    @staticmethod
-    def aim_for(ant, target):
-        """Return cell if avail"""
-        for cell in ant.cell.get_neighborhood():
-            for agent in cell.agents:
-                if isinstance(agent, target):
-                    return cell
-
-        return ant.model.random.choice(AntBrain.prune_next(ant))
+        return next_step if next_step else list(base_set)
 
     @staticmethod
     def wander(ant):
         """Return Food if avail"""
-        return AntBrain.aim_for(ant, Food)
+        filter1 = lambda cell: cell not in ant.history
+        filter2 = lambda cell: Food in [type(agent) for agent in cell.agents]
+
+        base_set = ant.cell.get_neighborhood()
+        subset_f1 = base_set.select(filter1)
+        subset_f1_f2 = subset_f1.select(filter2)
+
+        final_subset = subset_f1_f2 or subset_f1 or base_set
+
+        return final_subset.select_random_cell()
 
     @staticmethod
     def holding(ant):
         """Return Hill if avail"""
-        return AntBrain.aim_for(ant, Hill)
+        filter1 = lambda cell: cell in ant.history
+        filter2 = lambda cell: Hill in [type(agent) for agent in cell.agents]
+
+        base_set = ant.cell.get_neighborhood()
+        subset_f1 = base_set.select(filter1)
+        subset_f1_f2 = subset_f1.select(filter2)
+
+        final_subset = subset_f1_f2 or subset_f1 or base_set
+
+        return final_subset.select_random_cell()

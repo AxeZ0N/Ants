@@ -261,35 +261,37 @@ class TestNavigation(unittest.TestCase):
 
     def test_ant_retrace_steps(self):
         self.model = Model(
-                width = 10,
-                height = 1,
+                width = 1,
+                height = 10,
                 seed = 1,
         )
 
-        ant = self.ant_agent
-        ant.cell = self.model.grid[(9, 0)]
+        ant_pos = (0,9)
+        home_pos = (0,0)
 
-        ant.storage = [agents.Food(self.model, ant.cell.coordinate)]
-        ant.state = ant.HOLDING
+        my_ant = Ant(self.model, ant_pos)
+        my_ant.cell = self.model.grid[(ant_pos)]
 
-        ant.history = []
+        my_ant.storage = [agents.Food(self.model, my_ant.cell.coordinate)]
+        my_ant.state = my_ant.HOLDING
+
+        my_ant.history = []
         for i in range(10):
-            ant.history.append(self.model.grid[(i, 0)])
+            my_ant.history.append(self.model.grid[(0, i)])
 
-        home = agents.Hill(self.model, (0, 0))
+        home = agents.Hill(self.model, home_pos)
 
-        food = agents.Food(self.model, (9, 0))
-
-        can_go_home = ant.ant_brain.can_go_home(ant)
-        print(f"Can go home?: {bool(can_go_home)}")
+        can_go_home = my_ant.ant_brain.can_go_home(my_ant)
+        #print(f"Can go home?: {bool(can_go_home)}")
 
 
-        test = ant.storage.copy()
+        test = my_ant.storage.copy()
         for _ in range(9):
+            #print(my_ant.ant_brain.holding(my_ant))
             self.model.step()
             self.showgrid()
 
-        #self.assertEqual(home.storage, test)
+        self.assertEqual(home.storage, test)
 
     def showgrid(self, ignore_smells=True):
         # print(self.ant_agent.cell.coordinate)
