@@ -45,8 +45,7 @@ class Ant(CellAgent):
         # Step 3: Update state dependants
         self.state = self._update_state()
         self.color = self._update_color()
-        if self.is_test:
-            self.plot_history()
+        self.plot_history()
 
     def _update_color(self):
         """Internal"""
@@ -115,13 +114,22 @@ class AntBrain:
                 ]
 
     @staticmethod
-    def prune_next(ant):
+    def go_home(ant):
         valid = lambda cell: cell in ant.history
         possible = ant.cell.get_neighborhood()
 
         next_step = AntBrain._select_cells(possible, valid)
         
-        return next_step if next_step else possible
+        return next_step if next_step else list(possible)
+
+    @staticmethod
+    def prune_next(ant):
+        valid = lambda cell: cell not in ant.history
+        possible = ant.cell.get_neighborhood()
+
+        next_step = AntBrain._select_cells(possible, valid)
+        
+        return next_step if next_step else list(possible)
 
     @staticmethod
     def aim_for(ant, target):

@@ -132,6 +132,7 @@ class TestAnt(unittest.TestCase):
 
     def showgrid(self):
         # print(self.ant_agent.cell.coordinate)
+        print()
         for i in range(self.model.grid.width):
             for j in range(self.model.grid.height):
                 cell = self.model.grid[(i, j)]
@@ -153,13 +154,15 @@ class TestAnt(unittest.TestCase):
                 height = 10,
                 seed = 1,
         )
+
         self.ant_agent = Ant(self.model, (0, 0))
-        # self.ant_agent.is_test = True
+        self.ant_agent.is_test = True
 
         for i in range(10):
+            #print(self.ant_agent.history)
             hx_len = len(self.ant_agent.history)
             self.assertEqual(hx_len, len(set(self.ant_agent.history)))
-            # self.showgrid()
+            #self.showgrid()
             self.model.step()
 
     def test_prefer_food(self):
@@ -257,11 +260,17 @@ class TestNavigation(unittest.TestCase):
             #print(f"Angle from ant {ant_pos} to avg history {avg}: {angle}")
 
     def test_ant_retrace_steps(self):
-        ant = self.ant_agent
+        self.model = Model(
+                width = 10,
+                height = 1,
+                seed = 1,
+        )
 
-        ant.state = ant.HOLDING
-        ant.storage = [agents.Food(self.model, ant.cell.coordinate)]
+        ant = self.ant_agent
         ant.cell = self.model.grid[(9, 0)]
+
+        ant.storage = [agents.Food(self.model, ant.cell.coordinate)]
+        ant.state = ant.HOLDING
 
         ant.history = []
         for i in range(10):
@@ -272,18 +281,28 @@ class TestNavigation(unittest.TestCase):
         food = agents.Food(self.model, (9, 0))
 
         can_go_home = ant.ant_brain.can_go_home(ant)
-        print("Can go home?")
-        print(can_go_home)
+        print(f"Can go home?: {bool(can_go_home)}")
 
-        #print(ant.history)
-        #print(ant.cell.coordinate)
 
-    def showgrid(self):
+        test = ant.storage.copy()
+        for _ in range(9):
+            self.model.step()
+            self.showgrid()
+
+        #self.assertEqual(home.storage, test)
+
+    def showgrid(self, ignore_smells=True):
         # print(self.ant_agent.cell.coordinate)
+        print()
         for i in range(self.model.grid.width):
             for j in range(self.model.grid.height):
                 cell = self.model.grid[(i, j)]
-                if len(cell.agents):
+                if ignore_smells:
+                    agents_in_cell = [x for x in cell.agents if not issubclass(type(x), agents.Smell)]
+                else:
+                    agents_in_cell = cell.agents
+
+                if len(agents_in_cell):
                     print("x", end="")
                 else:
                     print(".", end="")

@@ -40,6 +40,8 @@ class Model(mesa.Model):
 
         self.info = solara.reactive(self.get_info(), equals=lambda x, y: False)
 
+        self.relocate_ants()
+
     def step(self):
         agents_list = self.agents_by_type.copy()
         for _, v in agents_list.items():
@@ -50,6 +52,17 @@ class Model(mesa.Model):
         """Used by solara viz"""
         return self.agents_by_type
 
+    def relocate_ants(self):
+        """Ants should spawn at home"""
+
+        agents_list = self.agents_by_type
+        if agents.Hill not in agents_list: return
+
+        hill = agents_list[agents.Hill][0]
+        ants = agents_list[ant.Ant]
+
+        for my_ant in ants:
+            my_ant.cell = hill.cell
 
 toggle_states = [True, False]
 curr_toggle_state = solara.reactive(False)
@@ -108,8 +121,8 @@ players = [
 
 
 model_params = {
-    "width": 40,
-    "height": 40,
+    "width": 10,
+    "height": 10,
     "seed": 1,
     "players": players,
 }
