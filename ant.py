@@ -118,7 +118,9 @@ class AntBrain:
 
     @staticmethod
     def wander(ant):
-        """Return Food if avail"""
+        """Return Food if avail
+        Food -> Unvisited -> Visited
+        """
         filter1 = lambda cell: cell not in ant.history
         filter2 = lambda cell: Food in [type(agent) for agent in cell.agents]
 
@@ -132,7 +134,9 @@ class AntBrain:
 
     @staticmethod
     def holding(ant):
-        """Return Hill if avail"""
+        """Return Hill if avail
+        Hill -> Visited -> Unvisited
+        """
         filter1 = lambda cell: cell in ant.history
         filter2 = lambda cell: Hill in [type(agent) for agent in cell.agents]
 
