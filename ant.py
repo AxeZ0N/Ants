@@ -21,7 +21,6 @@ class Coord:
         return self.x-target.x, self.y-target.y
 
 def get_delta(c1,c2):
-    assert type(c1) == type(c2) == tuple
     return Coord(*c1) - Coord(*c2)
 
 class Ant(My_Cell_Agent):
@@ -36,7 +35,7 @@ class Ant(My_Cell_Agent):
 
     def step(self):
         next_cell = self._choose_next_cell()
-        delta = get_delta(self.cell.coordinate, next_cell)
+        delta = get_delta(self.cell.coordinate, next_cell.coordinate)
 
         self.history.append(delta)
         self.cell = next_cell
