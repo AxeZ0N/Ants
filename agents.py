@@ -1,20 +1,26 @@
 from mesa.discrete_space import Cell, CellAgent, FixedAgent
 from agent_mixins import FoodStorage, EmitSmell
+from brain import Brain
 
 class Ant(CellAgent, FoodStorage, EmitSmell):
     '''
     Wander around until bumping into food
     '''
     color, size = 'red', 100
+    brain = None
     def __init__(self, model, coords):
         super().__init__(model)
         self.cell = self.model.grid[coords]
+        self.brain = Brain(priority = [Hill, Food, Smell,])
         self.smell = self.set_scent(Smell)
 
     def step(self):
         self.drop_smell()
         self.cell = self.cell.get_neighborhood().select_random_cell()
 
+    def get_next_action(self):
+        ''' Decide if ant should move or not '''
+        next_action = self.brain.next_action(self)
 
 class Hill(FixedAgent, FoodStorage):
 """

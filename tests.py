@@ -225,6 +225,7 @@ class TestAnt(unittest.TestCase):
 =======
         self.model.step()
 
+<<<<<<< HEAD
         self.assertEqual(self.ant_agent.cell, food.cell)
 
         self.model.step()
@@ -343,5 +344,14 @@ class TestNavigation(unittest.TestCase):
                 else:
                     print(".", end="")
             print()
+=======
+class TestBrain(unittest.TestCase):
+    def test_brain_act_random(self):
+        my_model = TestModel.generate_model()
+        my_ant = TestAgents.generate_ant(my_model)
+>>>>>>> d7edccc984ac346fec18f18e979e887f2975db02
 
+        my_brain = my_ant.brain
+        self.assertEqual([Hill, Food, Smell,],my_brain.priority)
+        print("brain")
 unittest.main()

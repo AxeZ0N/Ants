@@ -24,7 +24,7 @@ class Model(Model):
         super().__init__( seed = seed )
 
         self.grid = OrthogonalMooreGrid(
-                dimensions = (width,height),
+                dimensions = (width, height),
                 random = self.random,
                 )
 

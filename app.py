@@ -21,7 +21,6 @@ players = [
         agents.Food,
         ]
 
-model = model.Model(players = players)
 
 model_params = {
         'width':10,
@@ -29,6 +28,8 @@ model_params = {
         'seed':1,
         'players':players,
         }
+
+model = model.Model(**model_params)
 
 plot_comp = make_plot_component("encoding", page=1)
 
