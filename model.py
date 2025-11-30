@@ -24,13 +24,23 @@ class Model(mesa.Model):
             dimensions=(width, height), torus=False, random=self.random
         )
 
+        if players is not None:
+            for p in players:
+                p.create_agents(
+                        self,
+                        1,
+                        self.grid.empties.select_random_cell()
+                        )
+
     def step(self):
         agents_list = self.agents_by_type.copy()
-        print(agents_list)
+
+        print(f"Agents: {agents_list}")
 
         sorted_list = list(sorted(agents_list.keys()))
 
         do_update = [agents_list[agents].do("step") for agents in sorted_list]
+        print(do_update)
 
 
 def agent_portrayal(agent):
