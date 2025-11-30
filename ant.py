@@ -28,10 +28,13 @@ class Ant(My_Cell_Agent):
     Wander around until bumping into food
     """
 
+    WANDER, HOLDING, FOLLOW = "WANDER", "HOLDING", "FOLLOW"
+    
     def __init__(self, model, cell=None):
         super().__init__(model, cell)
         self.history = []
         self.storage = []
+        self.state = Ant.WANDER
 
     def step(self):
         next_cell = self._choose_next_cell()
@@ -46,8 +49,16 @@ class Ant(My_Cell_Agent):
         self.history.append(delta)
 
     def _choose_next_cell(self):
-        next_cell = self.cell.get_neighborhood().select_random_cell()
-        return next_cell
+        next_cell = self.cell.get_neighborhood()
+        all_agents = [list(cell.agents) for cell in next_cell]
+        print(all_agents)
+        return next_cell.select_random_cell()
 
     def _lay_scent(self):
-        agents.Smell(self.model, cell=self.cell)
+        agents.Smell(self.model, cell=self.cell).step()
+
+    def _state_priority(self):
+        match self.state:
+            case Ant.WANDER: return [agents.Food]
+            case Ant.HOLDING: return [agents.Hill, agents.Smell]
+            case Ant.FOLLOW: return [agents.Food, agents.Smell]

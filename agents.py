@@ -26,7 +26,6 @@ class Smell(My_Fixed_Agent):
 
     def step(self):
         self._age()
-        print("Aged smell!")
 
     def _age(self):
         self.age += 1
