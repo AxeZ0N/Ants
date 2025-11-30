@@ -3,7 +3,7 @@ from mesa.discrete_space import FixedAgent
 
 class My_Fixed_Agent(FixedAgent):
     def __init__(self, model, cell=None):
-        self.model = model
+        super().__init__(model)
         self.cell = cell
         pass
 

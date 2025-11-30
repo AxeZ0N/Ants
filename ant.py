@@ -5,7 +5,7 @@ from mesa.discrete_space import CellAgent
 
 class My_Cell_Agent(CellAgent):
     def __init__(self, model, cell=None):
-        self.model = model
+        super().__init__(model)
         self.cell = cell
 
 

@@ -13,8 +13,7 @@ class TestAgent(unittest.TestCase):
 
     def test_agent_spawns(self):
         # All the stuff that can be spawned
-        my_model = model.Model(width=1, height=10, seed=1,
-                               players = [ant.Ant],)
+        my_model = model.Model(width=1, height=10, seed=1)
         my_hill = agents.Hill(my_model, cell=my_model.grid[(0, 0)])
         my_ant = ant.Ant(my_model, cell=my_model.grid[(0, 0)])
 
