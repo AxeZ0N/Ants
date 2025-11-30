@@ -20,12 +20,9 @@ class Ant(My_Cell_Agent):
         self.storage = []
 
     def step(self):
-        self._choose_next_cell()
+        self.cell = self._choose_next_cell()
         pass
 
     def _choose_next_cell(self):
-        print(self.cell)
-        print("foobar")
-        next_cell_list = self.cell.get_neighborhood()
-        print(f"Next cell: {list(next_cell_list)}")
-        return next_cell_list
+        next_cell = self.cell.get_neighborhood().select_random_cell()
+        return next_cell

@@ -35,12 +35,9 @@ class Model(mesa.Model):
     def step(self):
         agents_list = self.agents_by_type.copy()
 
-        print(f"Agents: {agents_list}")
-
-        sorted_list = list(sorted(agents_list.keys()))
+        sorted_list = list(sorted(agents_list.keys(),key = lambda x: str(x)))
 
         do_update = [agents_list[agents].do("step") for agents in sorted_list]
-        print(do_update)
 
 
 def agent_portrayal(agent):
