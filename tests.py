@@ -37,6 +37,7 @@ class TestAgent(unittest.TestCase):
 
         # Assert ant lef scent behind
         self.assertEqual(len(my_model.grid[(0,0)].agents), 1)
+        self.assertEqual(type(my_model.grid[(0,0)].agents[0]), agents.Smell)
         self.assertEqual(my_model.grid[(0,0)].agents[0].age, 1)
 
 

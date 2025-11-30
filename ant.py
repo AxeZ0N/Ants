@@ -2,6 +2,7 @@
 
 from mesa.discrete_space import CellAgent
 from dataclasses import dataclass
+from itertools import chain
 import agents
 
 
@@ -49,9 +50,21 @@ class Ant(My_Cell_Agent):
         self.history.append(delta)
 
     def _choose_next_cell(self):
-        next_cell = self.cell.get_neighborhood()
-        all_agents = [list(cell.agents) for cell in next_cell]
-        print(all_agents)
+        nbrhood = self.cell.get_neighborhood()
+        priority = self._state_priority()
+
+        return self._choose_cell_based_on_priority(nbrhood, priority)
+
+    def _choose_cell_based_on_priority(self, nbrhood, priority):
+        all_agents = chain([cell.agents for cell in nbrhood])
+        next_cell = nbrhood
+
+        for prio in priority:
+            prio_agents = [agent for agent in all_agents if isinstance(agent, prio)]
+            if not prio_agents: continue
+            next_cell = prio_agents
+            break
+
         return next_cell.select_random_cell()
 
     def _lay_scent(self):
