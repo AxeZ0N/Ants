@@ -7,7 +7,7 @@ class My_Cell_Agent(CellAgent):
         self.cell = cell
 
 
-class Ant(CellAgent):
+class Ant(My_Cell_Agent):
     """
     Wander around until bumping into food
     """
