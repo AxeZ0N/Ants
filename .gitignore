@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 venv/
 .vim
 __pycache__
-=======
->>>>>>> d7edccc984ac346fec18f18e979e887f2975db02
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -227,4 +221,3 @@ __marimo__/
 venv/
 __pycache__/
 .fuse*
->>>>>>> 5bbd006b22372917fdc037bcb81ece62aeeae929
