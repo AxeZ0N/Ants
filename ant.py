@@ -1,6 +1,7 @@
 """Ants are the main part of the sim"""
 
 from mesa.discrete_space import CellAgent
+from dataclasses import dataclass
 
 
 class My_Cell_Agent(CellAgent):
@@ -8,6 +9,21 @@ class My_Cell_Agent(CellAgent):
         super().__init__(model)
         self.cell = cell
 
+@dataclass
+class Coord:
+    x: int
+    y: int
+
+    def __add__(self, target):
+        return self.x+target.x, self.y+target.y
+
+    def __sub__(self, target):
+        return self.x-target.x, self.y-target.y
+
+def get_delta(c1,c2):
+    assert type(c1) == type(c2) == tuple
+
+    return Coord(c1) - Coord(c2)
 
 class Ant(My_Cell_Agent):
     """
@@ -20,6 +36,8 @@ class Ant(My_Cell_Agent):
         self.storage = []
 
     def step(self):
+        delta = get_delta(self.cell.coordinate, (10,10))
+        print(f"Delta: {delta}")
         self.cell = self._choose_next_cell()
         pass
 
