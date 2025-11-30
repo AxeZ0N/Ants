@@ -20,9 +20,6 @@ class Coord:
     def __sub__(self, target):
         return self.x-target.x, self.y-target.y
 
-def get_delta(c1,c2):
-    return Coord(*c1) - Coord(*c2)
-
 class Ant(My_Cell_Agent):
     """
     Wander around until bumping into food
@@ -35,7 +32,7 @@ class Ant(My_Cell_Agent):
 
     def step(self):
         next_cell = self._choose_next_cell()
-        delta = get_delta(self.cell.coordinate, next_cell.coordinate)
+        delta = Coord(*next_cell.coordinate) - Coord(*self.cell.coordinate)
 
         self.history.append(delta)
         self.cell = next_cell
