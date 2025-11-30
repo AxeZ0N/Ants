@@ -22,7 +22,9 @@ class Ant(My_Cell_Agent):
         pass
 
     def _choose_next_cell(self):
-        next_cell_list = self.cell.get_neighborhood().select_random_cell()
-        print(f"Next cell: {next_cell_list}")
+        print(self.cell)
+        print('foobar')
+        next_cell_list = self.cell.get_neighborhood()
+        print(f"Next cell: {list(next_cell_list)}")
         return next_cell_list
 
