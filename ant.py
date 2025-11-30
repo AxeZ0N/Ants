@@ -2,6 +2,7 @@
 
 from mesa.discrete_space import CellAgent
 from dataclasses import dataclass
+import agents
 
 
 class My_Cell_Agent(CellAgent):
@@ -9,16 +10,18 @@ class My_Cell_Agent(CellAgent):
         super().__init__(model)
         self.cell = cell
 
+
 @dataclass
 class Coord:
     x: int
     y: int
 
     def __add__(self, target):
-        return self.x+target.x, self.y+target.y
+        return self.x + target.x, self.y + target.y
 
     def __sub__(self, target):
-        return self.x-target.x, self.y-target.y
+        return self.x - target.x, self.y - target.y
+
 
 class Ant(My_Cell_Agent):
     """
@@ -32,11 +35,19 @@ class Ant(My_Cell_Agent):
 
     def step(self):
         next_cell = self._choose_next_cell()
-        delta = Coord(*next_cell.coordinate) - Coord(*self.cell.coordinate)
 
-        self.history.append(delta)
+        self._update_hx(next_cell)
+        self._lay_scent()
+
         self.cell = next_cell
+
+    def _update_hx(self, next_cell):
+        delta = Coord(*next_cell.coordinate) - Coord(*self.cell.coordinate)
+        self.history.append(delta)
 
     def _choose_next_cell(self):
         next_cell = self.cell.get_neighborhood().select_random_cell()
         return next_cell
+
+    def _lay_scent(self):
+        agents.Smell(self.model, cell=self.cell)

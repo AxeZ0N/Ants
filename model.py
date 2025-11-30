@@ -26,16 +26,12 @@ class Model(mesa.Model):
 
         if players is not None:
             for p in players:
-                p.create_agents(
-                        self,
-                        1,
-                        self.grid.empties.select_random_cell()
-                        )
+                p.create_agents(self, 1, self.grid.empties.select_random_cell())
 
     def step(self):
         agents_list = self.agents_by_type.copy()
 
-        sorted_list = list(sorted(agents_list.keys(),key = lambda x: str(x)))
+        sorted_list = list(sorted(agents_list.keys(), key=str))
 
         do_update = [agents_list[agents].do("step") for agents in sorted_list]
 
