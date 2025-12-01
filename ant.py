@@ -54,17 +54,16 @@ class Ant(MyCellAgent):
     def __init__(self, model, cell=None):
         """ """
         super().__init__(model, cell)
-        self.history = []
+        self.history = [(0,0)]
         self.storage = []
         self.state = Ant.WANDER
 
     def step(self):
         """ """
         next_cell = self._choose_next_cell()
-        print(self.cell)
 
-        self._update_hx(next_cell)
         self._lay_scent()
+        self._update_hx(next_cell)
 
         self.cell = next_cell
 

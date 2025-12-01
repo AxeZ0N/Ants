@@ -40,7 +40,7 @@ class TestAgent(unittest.TestCase):
         self.assertEqual(my_smell.cell.coordinate, (0, 3))
 
         # Testing tracked attrs
-        self.assertEqual(my_ant.history, [(0, 1)])
+        self.assertEqual(my_ant.history, [(0,0),(0, -1)])
 
         # Assert ant lef scent behind
         self.assertEqual(len(my_model.grid[(0, 0)].agents), 1)
