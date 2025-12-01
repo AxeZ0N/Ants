@@ -1,3 +1,5 @@
+""" """
+
 import unittest
 import agents
 import model
@@ -5,13 +7,18 @@ import ant
 
 
 class TestAgent(unittest.TestCase):
+    """ """
+
     def setUp(self):
+        """ """
         pass
 
     def tearDown(self):
+        """ """
         pass
 
     def test_agent_spawns(self):
+        """ """
         # All the stuff that can be spawned
         my_model = model.Model(width=1, height=10, seed=1)
         my_ant = ant.Ant(my_model, cell=my_model.grid[(0, 0)])
@@ -36,9 +43,9 @@ class TestAgent(unittest.TestCase):
         self.assertEqual(my_ant.history, [(0, 1)])
 
         # Assert ant lef scent behind
-        self.assertEqual(len(my_model.grid[(0,0)].agents), 1)
-        self.assertEqual(type(my_model.grid[(0,0)].agents[0]), agents.Smell)
-        self.assertEqual(my_model.grid[(0,0)].agents[0].age, 1)
+        self.assertEqual(len(my_model.grid[(0, 0)].agents), 1)
+        self.assertEqual(type(my_model.grid[(0, 0)].agents[0]), agents.Smell)
+        self.assertEqual(my_model.grid[(0, 0)].agents[0].age, 1)
 
 
 if __name__ == "__main__":

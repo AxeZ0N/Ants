@@ -8,8 +8,8 @@ nnoremap <silent>  :nohlsearch
 omap <silent> % <Plug>(MatchitOperationForward)
 xmap <silent> % <Plug>(MatchitVisualForward)
 nmap <silent> % <Plug>(MatchitNormalForward)
-xmap Q gq
 nmap Q gq
+xmap Q gq
 omap Q gq
 vmap Y "+y
 nnoremap ZZ :wqa
@@ -93,7 +93,7 @@ let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd /media/k/General/Ryan/Desktop/Other/Code/Fun/Various_Ant_Sims/ants_and_tests
+cd ~/Desktop/Ants
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
@@ -104,8 +104,8 @@ else
 endif
 badd +1 agents.py
 badd +1 ant.py
-badd +29 model.py
-badd +24 tests.py
+badd +63 model.py
+badd +16 tests.py
 argglobal
 %argdel
 $argadd agents.py
@@ -160,7 +160,7 @@ endif
 setlocal fillchars=
 setlocal fixendofline
 setlocal foldcolumn=0
-setlocal foldenable
+setlocal nofoldenable
 setlocal foldexpr=0
 setlocal foldignore=#
 setlocal foldlevel=0
@@ -393,7 +393,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 63 - ((34 * winheight(0) + 19) / 38)
+let s:l = 63 - ((32 * winheight(0) + 19) / 38)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
@@ -445,7 +445,7 @@ endif
 setlocal fillchars=
 setlocal fixendofline
 setlocal foldcolumn=0
-setlocal foldenable
+setlocal nofoldenable
 setlocal foldexpr=0
 setlocal foldignore=#
 setlocal foldlevel=0
@@ -540,7 +540,7 @@ if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
 keepjumps 2
-normal! 014|
+normal! 0
 tabnext
 edit tests.py
 argglobal
@@ -684,7 +684,7 @@ keepjumps exe s:l
 normal! zt
 keepjumps 16
 normal! 035|
-tabnext 3
+tabnext 4
 set stal=1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf

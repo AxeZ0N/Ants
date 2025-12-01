@@ -44,11 +44,18 @@ def agent_portrayal(agent):
     return AgentPortrayalStyle(size=size, color=color)
 
 
+players = [
+    ant.Ant,
+    ant.Ant,
+    ant.Ant,
+    agents.Hill,
+]
+
 model_params = {
     "width": 10,
     "height": 10,
     "seed": 1,
-    "players": None,
+    "players": players,
 }
 
 my_model = Model(**model_params)
