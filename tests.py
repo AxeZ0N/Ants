@@ -47,6 +47,18 @@ class TestAgent(unittest.TestCase):
         self.assertEqual(type(my_model.grid[(0, 0)].agents[0]), agents.Smell)
         self.assertEqual(my_model.grid[(0, 0)].agents[0].age, 1)
 
+    def test_ant_trails(self):
+        my_model = model.Model(width=10, height=10, seed=1)
+
+        my_ant = ant.Ant(my_model, cell=my_model.grid[(4,4)])
+
+        steps = [my_model.step() for _ in range(10)]
+        print(my_ant.history)
+        print(my_ant.cell.coordinate)
+
+        ant.retrace_ant_steps(my_ant)
+
+
 
 if __name__ == "__main__":
     unittest.main()

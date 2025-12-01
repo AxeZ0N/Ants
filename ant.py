@@ -27,6 +27,21 @@ class Coord:
     def __sub__(self, target):
         return self.x - target.x, self.y - target.y
 
+def retrace_ant_steps(ant):
+    start_cell = ant.cell.coordinate
+    curr_cell = start_cell
+    ret = []
+    for delta in reversed(ant.history):
+        print(f"Curr cell: {curr_cell}")
+        print(f"Next delta: {delta}")
+
+        curr_cell = Coord(*curr_cell) + Coord(*delta)
+
+        ret.append(curr_cell)
+
+        
+    return 
+
 
 class Ant(MyCellAgent):
     """
@@ -46,6 +61,7 @@ class Ant(MyCellAgent):
     def step(self):
         """ """
         next_cell = self._choose_next_cell()
+        print(self.cell)
 
         self._update_hx(next_cell)
         self._lay_scent()
@@ -54,7 +70,7 @@ class Ant(MyCellAgent):
 
     def _update_hx(self, next_cell):
         """ """
-        delta = Coord(*next_cell.coordinate) - Coord(*self.cell.coordinate)
+        delta = Coord(*self.cell.coordinate) - Coord(*next_cell.coordinate)
         self.history.append(delta)
 
     def _choose_next_cell(self):
