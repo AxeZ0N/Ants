@@ -73,7 +73,7 @@ class Ant(MyCellAgent):
 
     def step(self):
         """Called in each iteration of the model"""
-        if self.state = self.WANDER:
+        if self.state == self.WANDER:
             next_cell = self.wander()
         self.cell = next_cell
 
