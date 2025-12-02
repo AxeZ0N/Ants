@@ -46,6 +46,18 @@ def retrace_ant_steps(ant):
 class Ant(MyCellAgent):
     """
     Wander around until bumping into food
+
+    While in state WANDER:
+        Ants prefer Food.
+        Ants avoid Smells.
+
+    While in state HOLDING:
+        Ants prefer Home -> Smells.
+        Ants avoid Food.
+
+    While in state FOLLOW:
+        Ants prefer Food -> Smells.
+
     """
 
     color, size = "red", 20
@@ -60,54 +72,4 @@ class Ant(MyCellAgent):
 
     def step(self):
         """ Called in each iteration of the model """
-        next_cell = self._choose_next_cell()
-
-        self._lay_scent()
-        self._update_hx(next_cell)
-
-        self.cell = next_cell
-
-    def _update_hx(self, next_cell):
-        """ """
-        delta = Coord(*self.cell.coordinate) - Coord(*next_cell.coordinate)
-        self.history.append(delta)
-
-    def _choose_next_cell(self):
-        """ """
-        nbrhood = self.cell.get_neighborhood()
-        priority = self._state_priority()
-
-        return self._choose_cell_based_on_priority(nbrhood, priority)
-
-    def _choose_cell_based_on_priority(self, nbrhood, priority):
-        """ """
-        all_agents = chain([cell.agents for cell in nbrhood])
-        next_cell = nbrhood
-
-        for prio in priority:
-            prio_agents = [agent for agent in all_agents if isinstance(agent, prio)]
-            if not prio_agents:
-                continue
-            next_cell = prio_agents
-            break
-
-        return next_cell.select_random_cell()
-
-    def _lay_scent(self):
-        """ """
-        agents.Smell(self.model, cell=self.cell).step()
-
-    def _set_state(self, new_state):
-        """ """
-        self.state = new_state
-
-    def _state_priority(self):
-        """ """
-        match self.state:
-            case Ant.WANDER:
-                return [agents.Food]
-            case Ant.HOLDING:
-                return [agents.Hill, agents.Smell]
-            case Ant.FOLLOW:
-                return [agents.Food, agents.Smell]
-
+        pass
