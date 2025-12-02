@@ -69,7 +69,7 @@ class TestAgent(unittest.TestCase):
                 cell=cell,
             )
 
-            cell.add_agent(new_smell)
+            # cell.add_agent(new_smell)
 
         # Remove all the agents from the cell I want empty
         clear_cell = [x.remove() for x in my_model.grid[empty_cell].agents]
@@ -128,7 +128,46 @@ class TestAgent(unittest.TestCase):
 
     def test_ant_follow_smell(self):
         """Ants should be following the oldest scent trail"""
-        pass
+
+        ant_cell = (1, 1)
+        hill_cell = (1, 3)
+
+        my_model = model.Model(
+            width=3,
+            height=4,
+            seed=1,
+            players=None,
+        )
+
+        my_ant = ant.Ant(
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
+
+        my_food = agents.Food(
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
+
+        my_hill = agents.Hill(
+            model=my_model,
+            cell=my_model.grid[hill_cell],
+        )
+
+        my_ant.storage += [my_food]
+        my_ant.state = my_ant.HOLDING
+
+        for i, cell in enumerate(my_ant.cell.get_neighborhood()):
+            smell = agents.Smell(model=my_model, cell=cell)
+            smell.age = i
+
+        my_model.step()
+
+        print(my_ant.cell)
+
+        my_model.step()
+
+        print(my_ant.cell)
 
 
 if __name__ == "__main__":

@@ -73,8 +73,11 @@ class Ant(MyCellAgent):
 
     def step(self):
         """Called in each iteration of the model"""
-        if self.state == self.WANDER:
-            next_cell = self.wander()
+        match self.state:
+            case self.WANDER:
+                next_cell = self.wander()
+            case self.HOLDING:
+                next_cell = self.holding()
 
         self.drop_scent()
         self.cell = next_cell
@@ -146,19 +149,28 @@ class Ant(MyCellAgent):
         # Get possible next cells
         poss_next = self.cell.get_neighborhood()
 
-        # Filter by Food (if avail)
+        # Filter by Hill (if avail)
+        hills = filter_by_type(agents.Hill)
+
+        if hills:
+            return hills.select_random_cell()
+
+        # Filter by Smell, second best choice
         smells_only = filter_by_type(agents.Smell)
 
-        # Try to choose a cell
-        if food_only:
-            return food_only.select_random_cell()
+        if smells_only:
+            # Should choose oldest smell avail
 
-        # Second best choice
-        no_smells = filter_by_not_type(agents.Smell)
+            all_agents = list(chain([x.agents for x in smells_only]))
+            print(all_agents)
+            all_agents = [x for x in all_agents if isinstance(x, agents.Smell)]
+            print(f"After filter")
+            print(all_agents)
+            oldest_smells = list(reversed(sorted(all_agents, key=lambda x: x.age)))
 
-        # Try to choose a cell
-        if no_smells:
-            return no_smells.select_random_cell()
+            print(oldest_smells)
+
+
 
         # Fallback, choose randomly
         return poss_next.select_random_cell()
