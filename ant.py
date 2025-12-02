@@ -62,6 +62,7 @@ class Ant(MyCellAgent):
 
     color, size = "red", 20
     WANDER, HOLDING, FOLLOW = "WANDER", "HOLDING", "FOLLOW"
+    DEFAULT_STATE = WANDER
 
     def __init__(self, model, cell=None):
         """ """
@@ -73,3 +74,11 @@ class Ant(MyCellAgent):
     def step(self):
         """Called in each iteration of the model"""
         pass
+
+    def wander(self):
+        """ """
+        # Get possible next cells
+        poss_next = self.cell.get_neighborhood()
+
+        # Filter by Food (if avail)
+        food_only = poss_next.select(filter_func=lambda x: isinstance(x, agents.Food))

@@ -28,7 +28,7 @@ class Hill(My_Fixed_Agent):
         agents = self._spawn.create_agents(
             model=self.model,
             n=amt,
-            cell=[self.cell.coordinate for _ in range(amt)],
+            cell=[self.cell for _ in range(amt)],
         )
 
         return agents
