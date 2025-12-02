@@ -7,7 +7,7 @@ import agents
 
 
 class MyCellAgent(CellAgent):
-    """ """
+    """ Helper """
 
     def __init__(self, model, cell=None):
         super().__init__(model)
@@ -16,7 +16,7 @@ class MyCellAgent(CellAgent):
 
 @dataclass
 class Coord:
-    """ """
+    """ Class for manipulating xy coords """
 
     x: int
     y: int
@@ -59,7 +59,7 @@ class Ant(MyCellAgent):
         self.state = Ant.WANDER
 
     def step(self):
-        """ """
+        """ Called in each iteration of the model """
         next_cell = self._choose_next_cell()
 
         self._lay_scent()
@@ -110,3 +110,4 @@ class Ant(MyCellAgent):
                 return [agents.Hill, agents.Smell]
             case Ant.FOLLOW:
                 return [agents.Food, agents.Smell]
+

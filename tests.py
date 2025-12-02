@@ -53,10 +53,8 @@ class TestAgent(unittest.TestCase):
         my_ant = ant.Ant(my_model, cell=my_model.grid[(4,4)])
 
         steps = [my_model.step() for _ in range(10)]
-        print(my_ant.history)
-        print(my_ant.cell.coordinate)
 
-        ant.retrace_ant_steps(my_ant)
+        #ant.retrace_ant_steps(my_ant)
 
 
 
