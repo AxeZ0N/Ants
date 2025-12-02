@@ -18,9 +18,9 @@ class TestAgent(unittest.TestCase):
         pass
 
     def test_ant_prefer_food(self):
-        """Move on to food if in wander and avail"""
+        """Move onto food if possible """
 
-        hill_cell = (1, 1)
+        ant_cell = (1, 1)
         food_cell = (2, 1)
 
         my_model = model.Model(
@@ -30,20 +30,15 @@ class TestAgent(unittest.TestCase):
             players=None,
         )
 
-        my_hill = agents.Hill(
-            model=my_model,
-            cell=my_model.grid[hill_cell],
-            spawn=ant.Ant,
-        )
+        my_ant = ant.Ant(
+                model = my_model,
+                cell = my_model.grid[ant_cell], 
+                )
 
         my_food = agents.Food(
             model=my_model,
             cell=my_model.grid[food_cell],
         )
-
-        my_ant = my_hill.spawn(1)[0]
-
-        self.assertEqual(my_ant.cell, my_hill.cell)
 
         my_model.step()
 
@@ -52,7 +47,7 @@ class TestAgent(unittest.TestCase):
     def test_ant_avoid_smell(self):
         """Don't move onto smell if possible"""
 
-        hill_cell = (1, 1)
+        ant_cell = (1, 1)
         empty_cell = (2, 1)
 
         my_model = model.Model(
@@ -62,14 +57,12 @@ class TestAgent(unittest.TestCase):
             players=None,
         )
 
-        my_hill = agents.Hill(
-            model=my_model,
-            cell=my_model.grid[hill_cell],
-            spawn=ant.Ant,
-        )
+        my_ant = ant.Ant(
+                model = my_model,
+                cell = my_model.grid[ant_cell], 
+                )
 
-        my_ant = my_hill.spawn(1)[0]
-
+        # Fill all the neighbors with smells
         for cell in my_ant.cell.get_neighborhood():
             new_smell = agents.Smell(
                 model=my_model,
@@ -78,9 +71,8 @@ class TestAgent(unittest.TestCase):
 
             cell.add_agent(new_smell)
 
+        # Remove all the agents from the cell I want empty
         clear_cell = [x.remove() for x in my_model.grid[empty_cell].agents]
-
-        self.assertEqual(my_ant.cell, my_hill.cell)
 
         my_model.step()
 

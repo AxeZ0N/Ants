@@ -73,10 +73,9 @@ class Ant(MyCellAgent):
 
     def step(self):
         """Called in each iteration of the model"""
-        wander_result = self.wander()
-        print(f"Wander result: {wander_result}")
-        self.cell = wander_result
-        pass
+        if self.state = self.WANDER:
+            next_cell = self.wander()
+        self.cell = next_cell
 
     def wander(self):
         """ """
@@ -101,7 +100,9 @@ class Ant(MyCellAgent):
             )
         )
 
+        # Try to choose a cell
         if no_smells:
             return no_smells.select_random_cell()
 
+        # Fallback, choose randomly
         return poss_next.select_random_cell()
