@@ -79,26 +79,33 @@ class Ant(MyCellAgent):
 
     def wander(self):
         """ """
+
+        def filter_by_type(type_):
+            type_only = poss_next.select(
+                filter_func=lambda x: any(
+                    [isinstance(agt, type_) for agt in x.agents]
+                )
+            return type_only
+
+        def filter_by_not_type(type_):
+            type_only = poss_next.select(
+                filter_func=lambda x: not any(
+                    [isinstance(agt, type_) for agt in x.agents]
+                )
+            return type_only
+
         # Get possible next cells
         poss_next = self.cell.get_neighborhood()
 
         # Filter by Food (if avail)
-        food_only = poss_next.select(
-            filter_func=lambda x: any(
-                [isinstance(agt, agents.Food) for agt in x.agents]
-            )
-        )
+        food_only = filter_by_type(agents.Food)
 
         # Try to choose a cell
         if food_only:
             return food_only.select_random_cell()
 
         # Second best choice
-        no_smells = poss_next.select(
-            filter_func=lambda x: not any(
-                [isinstance(agt, agents.Smell) for agt in x.agents]
-            )
-        )
+        no_smells = filter_by_not_type(agents.Smell)
 
         # Try to choose a cell
         if no_smells:
