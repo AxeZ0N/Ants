@@ -97,14 +97,14 @@ class Ant(MyCellAgent):
 
         def filter_by_type(type_):
             type_only = poss_next.select(
-                filter_func=lambda x: any([isinstance(agt, type_) for agt in x.agents])
+                filter_func=lambda x: any(isinstance(agt, type_) for agt in x.agents)
             )
             return type_only
 
         def filter_by_not_type(type_):
             type_only = poss_next.select(
                 filter_func=lambda x: not any(
-                    [isinstance(agt, type_) for agt in x.agents]
+                    isinstance(agt, type_) for agt in x.agents
                 )
             )
             return type_only
@@ -134,14 +134,14 @@ class Ant(MyCellAgent):
 
         def filter_by_type(type_):
             type_only = poss_next.select(
-                filter_func=lambda x: any([isinstance(agt, type_) for agt in x.agents])
+                filter_func=lambda x: any(isinstance(agt, type_) for agt in x.agents)
             )
             return type_only
 
         def filter_by_not_type(type_):
             type_only = poss_next.select(
                 filter_func=lambda x: not any(
-                    [isinstance(agt, type_) for agt in x.agents]
+                    isinstance(agt, type_) for agt in x.agents
                 )
             )
             return type_only
@@ -161,16 +161,19 @@ class Ant(MyCellAgent):
         if smells_only:
             # Should choose oldest smell avail
 
-            all_agents = list(chain([x.agents for x in smells_only]))
-            print(all_agents)
-            all_agents = [x for x in all_agents if isinstance(x, agents.Smell)]
-            print(f"After filter")
-            print(all_agents)
-            oldest_smells = list(reversed(sorted(all_agents, key=lambda x: x.age)))
+            class DummySmell:
+                age = 0
 
-            print(oldest_smells)
+            oldest_smell = DummySmell
 
+            for smell in chain(*[x.agents for x in smells_only]):
+                if not isinstance(smell, agents.Smell):
+                    continue
 
+                if smell.age > oldest_smell.age:
+                    oldest_smell = smell
+
+            return oldest_smell.cell
 
         # Fallback, choose randomly
         return poss_next.select_random_cell()

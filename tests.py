@@ -130,6 +130,7 @@ class TestAgent(unittest.TestCase):
         """Ants should be following the oldest scent trail"""
 
         ant_cell = (1, 1)
+        old_smell_cell = (1, 2)
         hill_cell = (1, 3)
 
         my_model = model.Model(
@@ -161,13 +162,17 @@ class TestAgent(unittest.TestCase):
             smell = agents.Smell(model=my_model, cell=cell)
             smell.age = i
 
+        for ag in my_model.grid[old_smell_cell].agents:
+            if isinstance(ag, agents.Smell):
+                ag.age = 300
+
         my_model.step()
 
-        print(my_ant.cell)
+        self.assertEqual(my_ant.cell, my_model.grid[old_smell_cell])
 
         my_model.step()
 
-        print(my_ant.cell)
+        self.assertEqual(my_ant.cell, my_model.grid[hill_cell])
 
 
 if __name__ == "__main__":
