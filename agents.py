@@ -22,13 +22,16 @@ class Hill(My_Fixed_Agent):
         self._spawn = spawn
 
     def spawn(self, amt):
+        """Can spawn any number of things at self.cell.coordinate"""
         assert self._spawn is not None
 
-        self._spawn.create_agents(
+        agents = self._spawn.create_agents(
             model=self.model,
             n=amt,
             cell=[self.cell.coordinate for _ in range(amt)],
         )
+
+        return agents
 
 
 class Food(My_Fixed_Agent):

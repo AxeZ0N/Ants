@@ -20,6 +20,9 @@ class TestAgent(unittest.TestCase):
     def test_ant_wander(self):
         """Ants should prefer food and avoid smells in state wander"""
 
+    def test_hill_spawn(self):
+        """Hills should spawn an ant on request. Ant has default attributes"""
+
         my_model = model.Model(
             width=3,
             height=3,
@@ -27,12 +30,15 @@ class TestAgent(unittest.TestCase):
             players=None,
         )
 
-        my_hill = agents.Hill(model=my_model, cell=my_model.grid[(1, 0)], spawn=ant.Ant)
-
-        my_ant = ant.Ant(
+        my_hill = agents.Hill(
             model=my_model,
-            cell=my_model.grid[(1, 1)],
+            cell=my_model.grid[(1, 0)],
+            spawn=ant.Ant,
         )
+
+        my_ant = my_hill.spawn(1)[0]
+
+        self.assertEqual(
 
 
 if __name__ == "__main__":
