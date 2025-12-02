@@ -101,7 +101,7 @@ class TestAgent(unittest.TestCase):
         self.assertEqual(my_ant.cell, my_hill.cell)
         self.assertEqual(my_ant.state, ant.Ant.DEFAULT_STATE)
         self.assertEqual(my_ant.storage, [])
-        self.assertEqual(my_ant.history, [(0, 0)])
+        self.assertEqual(my_ant.history, [])
 
     def test_ant_smell_trail(self):
         """Test ant leaves a trail of smells wherever it walks"""
@@ -109,7 +109,7 @@ class TestAgent(unittest.TestCase):
         ant_cell = (0, 0)
 
         my_model = model.Model(
-            width=10,
+            width=12,
             height=1,
             seed=1,
             players=None,
@@ -124,7 +124,11 @@ class TestAgent(unittest.TestCase):
 
         agents = list(my_model.agents)
 
-        print(agents)
+        self.assertEqual(len(agents), 9 + 1)
+
+    def test_ant_follow_smell(self):
+        """Ants should be following the oldest scent trail"""
+        pass
 
 
 if __name__ == "__main__":

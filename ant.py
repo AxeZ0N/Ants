@@ -69,7 +69,7 @@ class Ant(MyCellAgent):
         super().__init__(model, cell)
         self.history = []
         self.storage = []
-        self.state = Ant.WANDER
+        self.state = Ant.DEFAULT_STATE
 
     def step(self):
         """Called in each iteration of the model"""
@@ -90,7 +90,7 @@ class Ant(MyCellAgent):
         self.history.append(smell)
 
     def wander(self):
-        """ """
+        """Steers ants towards unvisited cells & towards food"""
 
         def filter_by_type(type_):
             type_only = poss_next.select(
@@ -111,6 +111,43 @@ class Ant(MyCellAgent):
 
         # Filter by Food (if avail)
         food_only = filter_by_type(agents.Food)
+
+        # Try to choose a cell
+        if food_only:
+            return food_only.select_random_cell()
+
+        # Second best choice
+        no_smells = filter_by_not_type(agents.Smell)
+
+        # Try to choose a cell
+        if no_smells:
+            return no_smells.select_random_cell()
+
+        # Fallback, choose randomly
+        return poss_next.select_random_cell()
+
+    def holding(self):
+        """Guides ant backwards towards hill"""
+
+        def filter_by_type(type_):
+            type_only = poss_next.select(
+                filter_func=lambda x: any([isinstance(agt, type_) for agt in x.agents])
+            )
+            return type_only
+
+        def filter_by_not_type(type_):
+            type_only = poss_next.select(
+                filter_func=lambda x: not any(
+                    [isinstance(agt, type_) for agt in x.agents]
+                )
+            )
+            return type_only
+
+        # Get possible next cells
+        poss_next = self.cell.get_neighborhood()
+
+        # Filter by Food (if avail)
+        smells_only = filter_by_type(agents.Smell)
 
         # Try to choose a cell
         if food_only:
