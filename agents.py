@@ -16,7 +16,19 @@ class Hill(My_Fixed_Agent):
     """Home base. Holds food."""
 
     color, size = "brown", 30
-    pass
+
+    def __init__(self, model, cell=None, spawn=None):
+        super().__init__(model, cell)
+        self._spawn = spawn
+
+    def spawn(self, amt):
+        assert self._spawn is not None
+
+        self._spawn.create_agents(
+            model=self.model,
+            n=amt,
+            cell=[self.cell.coordinate for _ in range(amt)],
+        )
 
 
 class Food(My_Fixed_Agent):

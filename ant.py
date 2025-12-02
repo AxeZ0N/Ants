@@ -7,7 +7,7 @@ import agents
 
 
 class MyCellAgent(CellAgent):
-    """ Helper """
+    """Helper"""
 
     def __init__(self, model, cell=None):
         super().__init__(model)
@@ -16,7 +16,7 @@ class MyCellAgent(CellAgent):
 
 @dataclass
 class Coord:
-    """ Class for manipulating xy coords """
+    """Class for manipulating xy coords"""
 
     x: int
     y: int
@@ -26,6 +26,7 @@ class Coord:
 
     def __sub__(self, target):
         return self.x - target.x, self.y - target.y
+
 
 def retrace_ant_steps(ant):
     start_cell = ant.cell.coordinate
@@ -39,8 +40,7 @@ def retrace_ant_steps(ant):
 
         ret.append(curr_cell)
 
-        
-    return 
+    return
 
 
 class Ant(MyCellAgent):
@@ -66,10 +66,10 @@ class Ant(MyCellAgent):
     def __init__(self, model, cell=None):
         """ """
         super().__init__(model, cell)
-        self.history = [(0,0)]
+        self.history = [(0, 0)]
         self.storage = []
         self.state = Ant.WANDER
 
     def step(self):
-        """ Called in each iteration of the model """
+        """Called in each iteration of the model"""
         pass
