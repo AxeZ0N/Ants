@@ -105,7 +105,26 @@ class TestAgent(unittest.TestCase):
 
     def test_ant_smell_trail(self):
         """Test ant leaves a trail of smells wherever it walks"""
-        pass
+
+        ant_cell = (0, 0)
+
+        my_model = model.Model(
+            width=10,
+            height=1,
+            seed=1,
+            players=None,
+        )
+
+        my_ant = ant.Ant(
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
+
+        steps = [my_model.step() for _ in range(9)]
+
+        agents = list(my_model.agents)
+
+        print(agents)
 
 
 if __name__ == "__main__":

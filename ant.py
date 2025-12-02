@@ -67,7 +67,7 @@ class Ant(MyCellAgent):
     def __init__(self, model, cell=None):
         """ """
         super().__init__(model, cell)
-        self.history = [(0, 0)]
+        self.history = []
         self.storage = []
         self.state = Ant.WANDER
 
@@ -75,7 +75,19 @@ class Ant(MyCellAgent):
         """Called in each iteration of the model"""
         if self.state == self.WANDER:
             next_cell = self.wander()
+
+        self.drop_scent()
         self.cell = next_cell
+
+    def drop_scent(self):
+        """Helps the ant remember where it's been"""
+
+        smell = agents.Smell(
+            model=self.model,
+            cell=self.cell,
+        )
+
+        self.history.append(smell)
 
     def wander(self):
         """ """
