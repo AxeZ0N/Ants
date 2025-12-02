@@ -18,7 +18,7 @@ class TestAgent(unittest.TestCase):
         pass
 
     def test_ant_prefer_food(self):
-        """Move onto food if possible """
+        """Move onto food if possible"""
 
         ant_cell = (1, 1)
         food_cell = (2, 1)
@@ -31,9 +31,9 @@ class TestAgent(unittest.TestCase):
         )
 
         my_ant = ant.Ant(
-                model = my_model,
-                cell = my_model.grid[ant_cell], 
-                )
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
 
         my_food = agents.Food(
             model=my_model,
@@ -58,15 +58,15 @@ class TestAgent(unittest.TestCase):
         )
 
         my_ant = ant.Ant(
-                model = my_model,
-                cell = my_model.grid[ant_cell], 
-                )
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
 
         # Fill all the neighbors with smells
         for cell in my_ant.cell.get_neighborhood():
             new_smell = agents.Smell(
                 model=my_model,
-                cell = cell,
+                cell=cell,
             )
 
             cell.add_agent(new_smell)
@@ -102,6 +102,10 @@ class TestAgent(unittest.TestCase):
         self.assertEqual(my_ant.state, ant.Ant.DEFAULT_STATE)
         self.assertEqual(my_ant.storage, [])
         self.assertEqual(my_ant.history, [(0, 0)])
+
+    def test_ant_smell_trail(self):
+        """Test ant leaves a trail of smells wherever it walks"""
+        pass
 
 
 if __name__ == "__main__":

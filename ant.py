@@ -82,9 +82,8 @@ class Ant(MyCellAgent):
 
         def filter_by_type(type_):
             type_only = poss_next.select(
-                filter_func=lambda x: any(
-                    [isinstance(agt, type_) for agt in x.agents]
-                )
+                filter_func=lambda x: any([isinstance(agt, type_) for agt in x.agents])
+            )
             return type_only
 
         def filter_by_not_type(type_):
@@ -92,6 +91,7 @@ class Ant(MyCellAgent):
                 filter_func=lambda x: not any(
                     [isinstance(agt, type_) for agt in x.agents]
                 )
+            )
             return type_only
 
         # Get possible next cells
