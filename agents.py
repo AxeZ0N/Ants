@@ -38,7 +38,20 @@ class Food(My_Fixed_Agent):
     """Ants search for these"""
 
     color, size = "yellow", 30
-    pass
+
+    def __init__(self, model, cell=None):
+        super().__init__(model, cell)
+
+    def step(self):
+        """Every iteration, check for ants to push food on"""
+        self.push_food()
+
+    def push_food(self):
+        for agent in self.cell.agents:
+            if not isinstance(agent, FixedAgent):
+                agent.storage.append(self)
+                agent.stat = agent.HOLDING
+
 
 
 class Smell(My_Fixed_Agent):
