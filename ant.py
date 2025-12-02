@@ -73,6 +73,9 @@ class Ant(MyCellAgent):
 
     def step(self):
         """Called in each iteration of the model"""
+        wander_result = self.wander()
+        print(f"Wander result: {wander_result}")
+        self.cell = wander_result
         pass
 
     def wander(self):
@@ -81,4 +84,24 @@ class Ant(MyCellAgent):
         poss_next = self.cell.get_neighborhood()
 
         # Filter by Food (if avail)
-        food_only = poss_next.select(filter_func=lambda x: isinstance(x, agents.Food))
+        food_only = poss_next.select(
+            filter_func=lambda x: any(
+                [isinstance(agt, agents.Food) for agt in x.agents]
+            )
+        )
+
+        # Try to choose a cell
+        if food_only:
+            return food_only.select_random_cell()
+
+        # Second best choice
+        no_smells = poss_next.select(
+            filter_func=lambda x: not any(
+                [isinstance(agt, agents.Smell) for agt in x.agents]
+            )
+        )
+
+        if no_smells:
+            return no_smells.select_random_cell()
+
+        return poss_next.select_random_cell()
