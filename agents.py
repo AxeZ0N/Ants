@@ -86,7 +86,7 @@ class Smell(MyFixedAgent):
         """Ants add a bit to the max age every time they pass over."""
         # Age the agent
         self._age()
-        
+
         # Check if the agent should extend its lifespan
         for agent in self.cell.agents:
             if isinstance(agent, FixedAgent):
@@ -100,7 +100,6 @@ class Smell(MyFixedAgent):
                 continue
             if agent.storage:
                 self.seen_food = True
-
 
     def _age(self):
         """ """

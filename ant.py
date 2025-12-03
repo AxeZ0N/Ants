@@ -210,7 +210,9 @@ class Ant(MyCellAgent):
         smells_only = filter_by_type(agents.Smell)
 
         # Filter by Smell:seen_food
-        seen_food_only = [smell for smell in smells_only if smell.seen_food]
+        smell_cell_agents = chain(*[cell.agents for cell in smells_only])
+
+        seen_food_only = [smell for smell in smell_cell_agents if smell.seen_food]
 
         if seen_food_only:
 
@@ -232,5 +234,3 @@ class Ant(MyCellAgent):
 
         # Fallback, choose randomly
         return poss_next.select_random_cell()
-
-
