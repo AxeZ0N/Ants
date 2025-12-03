@@ -174,6 +174,50 @@ class TestAgent(unittest.TestCase):
 
         self.assertEqual(my_ant.cell, my_model.grid[hill_cell])
 
+    def test_ant_state_follow(self):
+        """Ants follow seen_food smell trails until hitting food or turn back to wandering"""
+
+        ant_cell = (0, 0)
+        food_cell = (5, 0)
+
+        my_model = model.Model(
+            width=6,
+            height=1,
+            seed=1,
+            players=None,
+        )
+
+        my_food = agents.Food(
+            model=my_model,
+            cell=my_model.grid[food_cell],
+        )
+
+        my_ant = ant.Ant(
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
+
+        my_ant.state = my_ant.FOLLOW
+
+        smell_cells = reversed([(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0)])
+
+        for i, cell in enumerate(smell_cells):
+            smell = agents.Smell(
+                model=my_model,
+                cell=my_model.grid[cell],
+            )
+
+            smell.seen_food = True
+            smell.age = i
+
+        print(my_ant.cell)
+
+        steps = [my_model.step() for _ in range(5)]
+
+        print(my_ant.cell)
+
+        self.assertEqual(my_ant.cell, my_food.cell)
+
 
 if __name__ == "__main__":
     unittest.main()

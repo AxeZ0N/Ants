@@ -212,7 +212,13 @@ class Ant(MyCellAgent):
         # Filter by Smell:seen_food
         smell_cell_agents = chain(*[cell.agents for cell in smells_only])
 
-        seen_food_only = [smell for smell in smell_cell_agents if smell.seen_food]
+        seen_food_only = [
+            smell
+            for smell in smell_cell_agents
+            if isinstance(smell, agents.Smell) and smell.seen_food
+        ]
+
+        print(f"Seen food only: {seen_food_only}")
 
         if seen_food_only:
 
