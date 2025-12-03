@@ -49,7 +49,8 @@ class Food(My_Fixed_Agent):
     def push_food(self):
         for agent in self.cell.agents:
             if not isinstance(agent, FixedAgent):
-                if agent.storage: continue
+                if agent.storage:
+                    continue
                 agent.storage.append(self)
                 agent.state = agent.HOLDING
 

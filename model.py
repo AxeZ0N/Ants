@@ -24,9 +24,30 @@ class Model(mesa.Model):
             dimensions=(width, height), torus=False, random=self.random
         )
 
-        if players is not None:
+        if players is False:
+            self.build_test()
+        elif players is not None:
             for p in players:
-                p.create_agents(self, 1, self.grid.empties.select_random_cell())
+                p.create_agents(
+                        model = self,
+                        n = 1,
+                        cell = self.grid.empties.select_random_cell()
+                        )
+
+    def build_test(self):
+
+        food = agents.Food(
+                model = self,
+                cell = self.grid[(9,9)],
+                )
+
+        hill = agents.Hill(
+                model = self,
+                cell = self.grid[(0,0)],
+                spawn = ant.Ant
+                )
+
+        hill.spawn(1)
 
     def step(self):
         agents_list = self.agents_by_type.copy()
@@ -54,7 +75,7 @@ model_params = {
     "width": 10,
     "height": 10,
     "seed": 1,
-    "players": players,
+    "players": False,
 }
 
 my_model = Model(**model_params)
