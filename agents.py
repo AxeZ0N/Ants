@@ -80,15 +80,27 @@ class Smell(MyFixedAgent):
     def __init__(self, model, cell=None):
         super().__init__(model, cell)
         self.age = 0
+        self.seen_food = False
 
     def step(self):
         """Ants add a bit to the max age every time they pass over."""
+        # Age the agent
         self._age()
+        
+        # Check if the agent should extend its lifespan
         for agent in self.cell.agents:
             if isinstance(agent, FixedAgent):
                 continue
             self.max_age += 20
             break
+
+        # Check if this agent has seen an ant carrying food
+        for agent in self.cell.agents:
+            if isinstance(agent, FixedAgent):
+                continue
+            if agent.storage:
+                self.seen_food = True
+
 
     def _age(self):
         """ """

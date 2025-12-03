@@ -206,33 +206,29 @@ class Ant(MyCellAgent):
         # Get possible next cells
         poss_next = self.cell.get_neighborhood()
 
-        # Filter by Hill (if avail)
-        hills = filter_by_type(agents.Hill)
-
-        if hills:
-            return hills.select_random_cell()
-
-        # Filter by Smell, second best choice
+        # Filter by Smell
         smells_only = filter_by_type(agents.Smell)
 
-        if smells_only:
-            # Should choose oldest smell avail
+        # Filter by Smell:seen_food
+        seen_food_only = [smell for smell in smells_only if smell.seen_food]
+
+        if seen_food_only:
 
             class DummySmell:
-                age = 0
+                age = 999
 
-            oldest_smell = DummySmell
+            youngest_smell = DummySmell
 
             for smell in chain(*[x.agents for x in smells_only]):
                 if not isinstance(smell, agents.Smell):
                     continue
 
-                if smell.age > oldest_smell.age:
-                    oldest_smell = smell
+                if smell.age < youngest_smell.age:
+                    youngest_smell = smell
 
-            print(oldest_smell.cell)
+                return youngest_smell.cell
 
-            return oldest_smell.cell
+        self.state = self.WANDER
 
         # Fallback, choose randomly
         return poss_next.select_random_cell()
