@@ -164,7 +164,7 @@ class TestAgent(unittest.TestCase):
 
         for ag in my_model.grid[old_smell_cell].agents:
             if isinstance(ag, agents.Smell):
-                ag.age = 300
+                ag.age = 80
 
         my_model.step()
 

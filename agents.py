@@ -22,6 +22,10 @@ class Hill(MyFixedAgent):
         self._spawn = spawn
         self.storage = []
 
+    def step(self):
+        """ """
+        self.suck_food()
+
     def spawn(self, amt):
         """Can spawn any number of things at self.cell.coordinate"""
         assert self._spawn is not None
@@ -38,7 +42,7 @@ class Hill(MyFixedAgent):
         """If the agent moves, try to suck food"""
         for agent in self.cell.agents:
             if not isinstance(agent, FixedAgent):
-                if agent.storage:
+                if not agent.storage:
                     continue
                 self.storage.append(agent.storage.pop())
                 agent.state = agent.FOLLOW
@@ -71,7 +75,7 @@ class Smell(MyFixedAgent):
 
     color, size = "green", 15
     age = 0
-    max_age = 100
+    max_age = 200
 
     def __init__(self, model, cell=None):
         super().__init__(model, cell)
@@ -80,7 +84,7 @@ class Smell(MyFixedAgent):
     def step(self):
         """Ants add a bit to the max age every time they pass over."""
         self._age()
-        for agents in self.cell.agents:
+        for agent in self.cell.agents:
             if isinstance(agent, FixedAgent):
                 continue
             self.max_age += 20

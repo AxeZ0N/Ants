@@ -78,6 +78,8 @@ class Ant(MyCellAgent):
                 next_cell = self.wander()
             case self.HOLDING:
                 next_cell = self.holding()
+            case self.FOLLOW:
+                next_cell = self.follow()
 
         self.drop_scent()
         self.cell = next_cell
@@ -183,3 +185,56 @@ class Ant(MyCellAgent):
 
         # Fallback, choose randomly
         return poss_next.select_random_cell()
+
+    def follow(self):
+        """Guides ant to previously found Food"""
+
+        def filter_by_type(type_):
+            type_only = poss_next.select(
+                filter_func=lambda x: any(isinstance(agt, type_) for agt in x.agents)
+            )
+            return type_only
+
+        def filter_by_not_type(type_):
+            type_only = poss_next.select(
+                filter_func=lambda x: not any(
+                    isinstance(agt, type_) for agt in x.agents
+                )
+            )
+            return type_only
+
+        # Get possible next cells
+        poss_next = self.cell.get_neighborhood()
+
+        # Filter by Hill (if avail)
+        hills = filter_by_type(agents.Hill)
+
+        if hills:
+            return hills.select_random_cell()
+
+        # Filter by Smell, second best choice
+        smells_only = filter_by_type(agents.Smell)
+
+        if smells_only:
+            # Should choose oldest smell avail
+
+            class DummySmell:
+                age = 0
+
+            oldest_smell = DummySmell
+
+            for smell in chain(*[x.agents for x in smells_only]):
+                if not isinstance(smell, agents.Smell):
+                    continue
+
+                if smell.age > oldest_smell.age:
+                    oldest_smell = smell
+
+            print(oldest_smell.cell)
+
+            return oldest_smell.cell
+
+        # Fallback, choose randomly
+        return poss_next.select_random_cell()
+
+
