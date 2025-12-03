@@ -29,23 +29,17 @@ class Model(mesa.Model):
         elif players is not None:
             for p in players:
                 p.create_agents(
-                        model = self,
-                        n = 1,
-                        cell = self.grid.empties.select_random_cell()
-                        )
+                    model=self, n=1, cell=self.grid.empties.select_random_cell()
+                )
 
     def build_test(self):
 
         food = agents.Food(
-                model = self,
-                cell = self.grid[(9,9)],
-                )
+            model=self,
+            cell=self.grid[(9, 9)],
+        )
 
-        hill = agents.Hill(
-                model = self,
-                cell = self.grid[(0,0)],
-                spawn = ant.Ant
-                )
+        hill = agents.Hill(model=self, cell=self.grid[(0, 0)], spawn=ant.Ant)
 
         hill.spawn(1)
 

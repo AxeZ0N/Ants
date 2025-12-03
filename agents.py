@@ -1,9 +1,9 @@
-""" """
+"""Non moving interactive agents"""
 
 from mesa.discrete_space import FixedAgent
 
 
-class My_Fixed_Agent(FixedAgent):
+class MyFixedAgent(FixedAgent):
     """Helper"""
 
     def __init__(self, model, cell=None):
@@ -12,7 +12,7 @@ class My_Fixed_Agent(FixedAgent):
         pass
 
 
-class Hill(My_Fixed_Agent):
+class Hill(MyFixedAgent):
     """Home base. Holds food."""
 
     color, size = "brown", 30
@@ -20,6 +20,7 @@ class Hill(My_Fixed_Agent):
     def __init__(self, model, cell=None, spawn=None):
         super().__init__(model, cell)
         self._spawn = spawn
+        self.storage = []
 
     def spawn(self, amt):
         """Can spawn any number of things at self.cell.coordinate"""
@@ -33,8 +34,17 @@ class Hill(My_Fixed_Agent):
 
         return agents
 
+    def suck_food(self):
+        """If the agent moves, try to suck food"""
+        for agent in self.cell.agents:
+            if not isinstance(agent, FixedAgent):
+                if agent.storage:
+                    continue
+                self.storage.append(agent.storage.pop())
+                agent.state = agent.FOLLOW
 
-class Food(My_Fixed_Agent):
+
+class Food(MyFixedAgent):
     """Ants search for these"""
 
     color, size = "blue", 30
@@ -47,6 +57,7 @@ class Food(My_Fixed_Agent):
         self.push_food()
 
     def push_food(self):
+        """If the agent moves, try to push food"""
         for agent in self.cell.agents:
             if not isinstance(agent, FixedAgent):
                 if agent.storage:
@@ -55,15 +66,14 @@ class Food(My_Fixed_Agent):
                 agent.state = agent.HOLDING
 
 
-class Smell(My_Fixed_Agent):
+class Smell(MyFixedAgent):
     """Helps ants navigate"""
 
     color, size = "green", 15
     age = 0
-    max_age = 999
+    max_age = 100
 
     def __init__(self, model, cell=None):
-        """ """
         super().__init__(model, cell)
         self.age = 0
 
