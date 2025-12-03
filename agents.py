@@ -37,7 +37,7 @@ class Hill(My_Fixed_Agent):
 class Food(My_Fixed_Agent):
     """Ants search for these"""
 
-    color, size = "yellow", 30
+    color, size = "blue", 30
 
     def __init__(self, model, cell=None):
         super().__init__(model, cell)
@@ -49,9 +49,9 @@ class Food(My_Fixed_Agent):
     def push_food(self):
         for agent in self.cell.agents:
             if not isinstance(agent, FixedAgent):
+                if agent.storage: continue
                 agent.storage.append(self)
-                agent.stat = agent.HOLDING
-
+                agent.state = agent.HOLDING
 
 
 class Smell(My_Fixed_Agent):

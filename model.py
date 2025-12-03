@@ -46,9 +46,8 @@ def agent_portrayal(agent):
 
 players = [
     ant.Ant,
-    ant.Ant,
-    ant.Ant,
     agents.Hill,
+    agents.Food,
 ]
 
 model_params = {

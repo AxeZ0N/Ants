@@ -173,6 +173,8 @@ class Ant(MyCellAgent):
                 if smell.age > oldest_smell.age:
                     oldest_smell = smell
 
+            print(oldest_smell.cell)
+
             return oldest_smell.cell
 
         # Fallback, choose randomly
