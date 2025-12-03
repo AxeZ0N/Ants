@@ -78,8 +78,13 @@ class Smell(MyFixedAgent):
         self.age = 0
 
     def step(self):
-        """ """
+        """Ants add a bit to the max age every time they pass over."""
         self._age()
+        for agents in self.cell.agents:
+            if isinstance(agent, FixedAgent):
+                continue
+            self.max_age += 20
+            break
 
     def _age(self):
         """ """

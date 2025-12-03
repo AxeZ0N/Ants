@@ -85,6 +85,10 @@ class Ant(MyCellAgent):
     def drop_scent(self):
         """Helps the ant remember where it's been"""
 
+        for agent in self.cell.agents:
+            if isinstance(agent, agents.Smell):
+                return
+
         smell = agents.Smell(
             model=self.model,
             cell=self.cell,
