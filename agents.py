@@ -75,7 +75,7 @@ class Smell(MyFixedAgent):
 
     color, size = "green", 15
     age = 0
-    max_age = 200
+    max_age = 125
 
     def __init__(self, model, cell=None):
         super().__init__(model, cell)

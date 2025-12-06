@@ -81,6 +81,7 @@ class Ant(MyCellAgent):
             case self.FOLLOW:
                 next_cell = self.follow()
 
+        print(self.state)
         self.drop_scent()
         self.cell = next_cell
 
@@ -179,7 +180,7 @@ class Ant(MyCellAgent):
                 if smell.age > oldest_smell.age:
                     oldest_smell = smell
 
-            print(oldest_smell.cell)
+            #print(oldest_smell.cell)
 
             return oldest_smell.cell
 
@@ -206,6 +207,12 @@ class Ant(MyCellAgent):
         # Get possible next cells
         poss_next = self.cell.get_neighborhood()
 
+        # Go to food if it's there
+        food = filter_by_type(agents.Food)
+
+        if food:
+            return food.select_random_cell()
+
         # Filter by Smell
         smells_only = filter_by_type(agents.Smell)
 
@@ -218,8 +225,6 @@ class Ant(MyCellAgent):
             if isinstance(smell, agents.Smell) and smell.seen_food
         ]
 
-        print(f"Seen food only: {seen_food_only}")
-
         if seen_food_only:
 
             class DummySmell:
@@ -227,14 +232,14 @@ class Ant(MyCellAgent):
 
             youngest_smell = DummySmell
 
-            for smell in chain(*[x.agents for x in smells_only]):
+            for smell in seen_food_only:
                 if not isinstance(smell, agents.Smell):
                     continue
 
                 if smell.age < youngest_smell.age:
                     youngest_smell = smell
 
-                return youngest_smell.cell
+            return youngest_smell.cell
 
         self.state = self.WANDER
 

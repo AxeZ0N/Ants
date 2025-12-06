@@ -36,7 +36,7 @@ class Model(mesa.Model):
 
         food = agents.Food(
             model=self,
-            cell=self.grid[(9, 9)],
+            cell=self.grid[(7, 7)],
         )
 
         hill = agents.Hill(model=self, cell=self.grid[(0, 0)], spawn=ant.Ant)

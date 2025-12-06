@@ -122,9 +122,9 @@ class TestAgent(unittest.TestCase):
 
         steps = [my_model.step() for _ in range(9)]
 
-        agents = list(my_model.agents)
+        my_agents = list(my_model.agents)
 
-        self.assertEqual(len(agents), 9 + 1)
+        self.assertEqual(len(my_agents), 9 + 1)
 
     def test_ant_follow_smell(self):
         """Ants should be following the oldest scent trail"""
@@ -210,11 +210,9 @@ class TestAgent(unittest.TestCase):
             smell.seen_food = True
             smell.age = i
 
-        print(my_ant.cell)
+            print(smell)
 
         steps = [my_model.step() for _ in range(5)]
-
-        print(my_ant.cell)
 
         self.assertEqual(my_ant.cell, my_food.cell)
 
