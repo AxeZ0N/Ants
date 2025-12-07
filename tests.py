@@ -4,6 +4,8 @@ import unittest
 import agents
 import model
 import ant
+from mesa.discrete_space import CellCollection
+from mesa.agent import AgentSet
 
 
 class TestAgent(unittest.TestCase):
@@ -210,11 +212,77 @@ class TestAgent(unittest.TestCase):
             smell.seen_food = True
             smell.age = i
 
-            print(smell)
+            # print(smell)
 
         steps = [my_model.step() for _ in range(5)]
 
         self.assertEqual(my_ant.cell, my_food.cell)
+
+
+class TestCellChoices(unittest.TestCase):
+    def test_init(self):
+        """"""
+
+        ant_cell = (1, 1)
+
+        my_model = model.Model(
+            width=3,
+            height=3,
+            seed=1,
+            players=None,
+        )
+
+        my_ant = ant.Ant(
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
+
+        my_cell_choice = ant.CellChoices(my_ant)
+
+        self.assertEqual(my_cell_choice.base_cell, my_ant.cell)
+        self.assertEqual(my_cell_choice.nbr_cells, my_ant.cell.get_neighborhood())
+
+    def test_sorts(self):
+        ant_cell = (1, 1)
+
+        my_model = model.Model(
+            width=3,
+            height=3,
+            seed=1,
+            players=None,
+        )
+
+        my_ant = ant.Ant(
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
+
+        raw_smells = []
+
+        for i, cell in enumerate(my_ant.cell.get_neighborhood()):
+            smell = agents.Smell(model=my_model, cell=cell)
+
+            smell.age = i
+            raw_smells.append(smell)
+
+        my_cell_choice = ant.CellChoices(my_ant)
+
+        self.assertEqual(my_cell_choice.base_cell, my_ant.cell)
+        self.assertEqual(my_cell_choice.nbr_cells, my_ant.cell.get_neighborhood())
+
+        test_agents = [
+            agent for cell in my_ant.cell.get_neighborhood() for agent in cell.agents
+        ]
+
+        # for cell in my_ant.cell.get_neighborhood():
+        #    for agent in cell.agents:
+        #        test_agents.append(agent)
+
+        self.assertEqual(list(my_cell_choice.all_agents), list(AgentSet(test_agents)))
+
+        my_sorted_list = list(my_cell_choice.sort_by("age"))
+
+        self.assertEqual(my_sorted_list, raw_smells)
 
 
 if __name__ == "__main__":

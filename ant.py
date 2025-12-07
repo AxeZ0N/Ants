@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass
 from itertools import chain
-from mesa.discrete_space import CellAgent
+from mesa.discrete_space import CellAgent, CellCollection
+from mesa.agent import AgentSet
 import agents
 
 
@@ -43,6 +44,24 @@ def retrace_ant_steps(ant):
     return
 
 
+class CellChoices:
+    """Helps with stuff for decisions about next step"""
+
+    def __init__(self, cell_haver):
+
+        self.base_cell = cell_haver.cell
+        self.nbr_cells = self.base_cell.get_neighborhood() or []
+        self.all_agents = AgentSet(
+            self.nbr_cells.agents, random=cell_haver.model.random
+        )
+
+    def sort_by(self, attr):
+        if not len(self.all_agents):
+            return []
+
+        return sorted(self.all_agents, key=lambda x: x.__getattribute__(attr))
+
+
 class Ant(MyCellAgent):
     """
     Wander around until bumping into food
@@ -81,7 +100,7 @@ class Ant(MyCellAgent):
             case self.FOLLOW:
                 next_cell = self.follow()
 
-        print(self.state)
+        # print(self.state)
         self.drop_scent()
         self.cell = next_cell
 
@@ -180,7 +199,7 @@ class Ant(MyCellAgent):
                 if smell.age > oldest_smell.age:
                     oldest_smell = smell
 
-            #print(oldest_smell.cell)
+            # print(oldest_smell.cell)
 
             return oldest_smell.cell
 
