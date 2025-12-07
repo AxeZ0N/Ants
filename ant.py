@@ -2,8 +2,10 @@
 
 from dataclasses import dataclass
 from itertools import chain
+
 from mesa.discrete_space import CellAgent, CellCollection
 from mesa.agent import AgentSet
+
 import agents
 
 
@@ -56,25 +58,23 @@ class CellChoices:
         )
 
     def sort_agents_by(self, attr):
-        """ """
-        if not len(self.all_agents):
+        """Returns all agents in nbrs, sorted by attr."""
+        if not self.all_agents:
             return []
 
-        return sorted(self.all_agents, key=lambda x: x.__getattribute__(attr))
+        return sorted(self.all_agents, key=lambda x: getattr(x, attr))
 
     def sort_cells_by(self, type_):
         """Returns only cells that contain type_"""
 
         assert isinstance(type_, type)
 
-        cells_with_agents = (
-                agent.cell
-                for cell in self.nbr_cells
-                for agent in cell.agents
-                if isinstance(agent, type_)
-                )
-
-        return cells_with_agents
+        return (
+            agent.cell
+            for cell in self.nbr_cells
+            for agent in cell.agents
+            if isinstance(agent, type_)
+        )
 
 
 class Ant(MyCellAgent):

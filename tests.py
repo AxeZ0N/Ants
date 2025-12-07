@@ -1,11 +1,12 @@
 """ """
 
 import unittest
+
+from mesa.agent import AgentSet
+
 import agents
 import model
 import ant
-from mesa.discrete_space import CellCollection
-from mesa.agent import AgentSet
 
 
 class TestAgent(unittest.TestCase):
@@ -220,8 +221,10 @@ class TestAgent(unittest.TestCase):
 
 
 class TestCellChoices(unittest.TestCase):
+    """ """
+
     def test_init(self):
-        """"""
+        """ """
 
         ant_cell = (1, 1)
 
@@ -243,6 +246,7 @@ class TestCellChoices(unittest.TestCase):
         self.assertEqual(my_cell_choice.nbr_cells, my_ant.cell.get_neighborhood())
 
     def test_sort_agents(self):
+        """ """
         ant_cell = (1, 1)
 
         my_model = model.Model(
@@ -281,6 +285,7 @@ class TestCellChoices(unittest.TestCase):
         self.assertEqual(my_sorted_list, raw_smells)
 
     def test_sort_cells(self):
+        """ """
         ant_cell = (1, 1)
 
         my_model = model.Model(
@@ -299,11 +304,12 @@ class TestCellChoices(unittest.TestCase):
 
         for i, cell in enumerate(my_ant.cell.get_neighborhood()):
             smell = agents.Smell(model=my_model, cell=cell)
-            if not i % 2:
-                food = agents.Food(model=my_model, cell = cell)
-
             smell.age = i
-            food.size = i
+
+            if not i % 2:
+                food = agents.Food(model=my_model, cell=cell)
+                food.size = i
+
             raw_smells.append(smell)
 
         my_cell_choice = ant.CellChoices(my_ant)
@@ -311,20 +317,16 @@ class TestCellChoices(unittest.TestCase):
         self.assertEqual(my_cell_choice.base_cell, my_ant.cell)
         self.assertEqual(my_cell_choice.nbr_cells, my_ant.cell.get_neighborhood())
 
-        test_agents = [
-            agent for cell in my_ant.cell.get_neighborhood() for agent in cell.agents
-        ]
-
         type_ = agents.Food
 
         cells_with_agents = [
-                agent.cell
-                for cell in my_cell_choice.nbr_cells
-                for agent in cell.agents
-                if isinstance(agent, type_)
-                ]
+            agent.cell
+            for cell in my_cell_choice.nbr_cells
+            for agent in cell.agents
+            if isinstance(agent, type_)
+        ]
 
-        self.assertEqual(my_cell_choice.sort_cells_by(type_), cells_with_agents)
+        self.assertEqual(list(my_cell_choice.sort_cells_by(type_)), cells_with_agents)
 
 
 if __name__ == "__main__":
