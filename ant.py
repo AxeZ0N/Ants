@@ -55,11 +55,26 @@ class CellChoices:
             self.nbr_cells.agents, random=cell_haver.model.random
         )
 
-    def sort_by(self, attr):
+    def sort_agents_by(self, attr):
+        """ """
         if not len(self.all_agents):
             return []
 
         return sorted(self.all_agents, key=lambda x: x.__getattribute__(attr))
+
+    def sort_cells_by(self, type_):
+        """Returns only cells that contain type_"""
+
+        assert isinstance(type_, type)
+
+        cells_with_agents = (
+                agent.cell
+                for cell in self.nbr_cells
+                for agent in cell.agents
+                if isinstance(agent, type_)
+                )
+
+        return cells_with_agents
 
 
 class Ant(MyCellAgent):

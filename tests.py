@@ -242,7 +242,7 @@ class TestCellChoices(unittest.TestCase):
         self.assertEqual(my_cell_choice.base_cell, my_ant.cell)
         self.assertEqual(my_cell_choice.nbr_cells, my_ant.cell.get_neighborhood())
 
-    def test_sorts(self):
+    def test_sort_agents(self):
         ant_cell = (1, 1)
 
         my_model = model.Model(
@@ -274,15 +274,57 @@ class TestCellChoices(unittest.TestCase):
             agent for cell in my_ant.cell.get_neighborhood() for agent in cell.agents
         ]
 
-        # for cell in my_ant.cell.get_neighborhood():
-        #    for agent in cell.agents:
-        #        test_agents.append(agent)
-
         self.assertEqual(list(my_cell_choice.all_agents), list(AgentSet(test_agents)))
 
-        my_sorted_list = list(my_cell_choice.sort_by("age"))
+        my_sorted_list = list(my_cell_choice.sort_agents_by("age"))
 
         self.assertEqual(my_sorted_list, raw_smells)
+
+    def test_sort_cells(self):
+        ant_cell = (1, 1)
+
+        my_model = model.Model(
+            width=3,
+            height=3,
+            seed=1,
+            players=None,
+        )
+
+        my_ant = ant.Ant(
+            model=my_model,
+            cell=my_model.grid[ant_cell],
+        )
+
+        raw_smells = []
+
+        for i, cell in enumerate(my_ant.cell.get_neighborhood()):
+            smell = agents.Smell(model=my_model, cell=cell)
+            if not i % 2:
+                food = agents.Food(model=my_model, cell = cell)
+
+            smell.age = i
+            food.size = i
+            raw_smells.append(smell)
+
+        my_cell_choice = ant.CellChoices(my_ant)
+
+        self.assertEqual(my_cell_choice.base_cell, my_ant.cell)
+        self.assertEqual(my_cell_choice.nbr_cells, my_ant.cell.get_neighborhood())
+
+        test_agents = [
+            agent for cell in my_ant.cell.get_neighborhood() for agent in cell.agents
+        ]
+
+        type_ = agents.Food
+
+        cells_with_agents = [
+                agent.cell
+                for cell in my_cell_choice.nbr_cells
+                for agent in cell.agents
+                if isinstance(agent, type_)
+                ]
+
+        self.assertEqual(my_cell_choice.sort_cells_by(type_), cells_with_agents)
 
 
 if __name__ == "__main__":
