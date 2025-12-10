@@ -165,10 +165,14 @@ class Ant(MyCellAgent):
         )
 
         # Filter by cells in HX
-        smells_in_history = filter(
-            sorted_smells,
-            key=lambda smell: smell in self.history,
-        )
+        smells_in_history = [smell for smell in sorted_smells if smell in self.history]
+
+        if smells_in_history:
+            return smells_in_history[-1].cell
+
+        # Otherwise, return oldest smell
+        if sorted_smells:
+            return sorted_smells[-1].cell
 
         # Worst case
         return all_nbrs.select_random_cell()
