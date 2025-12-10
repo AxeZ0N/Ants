@@ -46,9 +46,19 @@ class Model(mesa.Model):
     def step(self):
         agents_list = self.agents_by_type.copy()
 
-        sorted_list = list(sorted(agents_list.keys(), key=str))
+        fixed, cell = [], []
+        for agent,type_ in agents_list.items():
+            if issubclass(agent, mesa.discrete_space.FixedAgent):
+                fixed += [agent]
+            elif issubclass(agent, mesa.discrete_space.CellAgent):
+                cell += [agent]
+        
 
-        do_update = [agents_list[agents].do("step") for agents in sorted_list]
+        sorted_list = fixed.extend(cell)
+
+        print(f"Update order: {sorted_list}")
+
+        do_update = [agent.step() for agent in sorted_list]
 
 
 def agent_portrayal(agent):

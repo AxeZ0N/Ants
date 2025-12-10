@@ -53,8 +53,10 @@ class Hill(MyFixedAgent):
             if not isinstance(agent, FixedAgent):
                 if not agent.storage:
                     continue
+
                 self.storage.append(agent.storage.pop())
                 agent.state = agent.FOLLOW
+                agent.history = []
 
 
 class Food(MyFixedAgent):
