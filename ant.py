@@ -164,7 +164,7 @@ class Ant(MyCellAgent):
             attr="age",
         )
 
-        print(sorted_smells)
+        print(list(sorted_smells))
 
         if sorted_smells:
             return sorted_smells[-1].cell

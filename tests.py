@@ -119,37 +119,42 @@ class TestAntHold(unittest.TestCase):
         self.test_model = None
         self.test_ant = None
 
-        """Ants prefer adjacent food in state: WANDER"""
+    def test_follow_trail(self):
+        """Ants"""
 
-        # Surround ant with tempting smells
+        # Surround ant with a spiral of aged smells
         smells = []
 
-        food_pos = (1, 0)
+        start_pos, end_pos = self.ant_pos, (2, 2)
+
+        age = 0
 
         for i in range(0, 3):
             for j in range(0, 3):
                 coord = (i, j)
-                if coord in (self.ant_pos, food_pos):
+                if coord in (self.ant_pos):
                     continue
 
                 smell = agents.Smell(
                     model=self.test_model,
                     cell=self.test_model.grid[coord],
                 )
+                age += 1
+
+                smell.age = age
 
                 smells += [smell]
 
-        # Replace one smell with food
-        food = agents.Food(
-            model=self.test_model,
-            cell=self.test_model.grid[food_pos],
-        )
+        # Step 7 times and see if the ant makes it around
+        self.assertEqual(self.test_ant.cell.coordinate, start_pos)
 
-        self.assertEqual(self.test_ant.cell.coordinate, self.ant_pos)
+        [self.test_model.step() for _ in range(10)]
 
-        self.test_model.step()
+        print(f"Readout for smell ages:")
+        for ag in self.test_model.agents:
+            print(f"Type: {type(ag)}, Age {ag.age}, Location: {ag.cell.coordinate}")
 
-        self.assertEqual(self.test_ant.cell.coordinate, food_pos)
+        self.assertEqual(self.test_ant.cell.coordinate, end_pos)
 
     def test_prefer_hill(self):
         """Ants ultimately drop off food at home when they find it"""
@@ -267,7 +272,7 @@ class TestAgent(unittest.TestCase):
         )
 
         my_ant.storage += [my_food]
-        my_ant.state = my_ant.HOLDING
+        my_ant.state = my_ant.HOLD
 
         for i, cell in enumerate(my_ant.cell.get_neighborhood()):
             smell = agents.Smell(model=my_model, cell=cell)
@@ -282,11 +287,6 @@ class TestAgent(unittest.TestCase):
         self.assertEqual(my_ant.cell, my_model.grid[old_smell_cell])
 
         my_model.step()
-
-        print(f"Readout for smell ages:")
-        for ag in my_model.agents:
-
-            print(f"Type: {type(ag)}, Age {ag.age}, Location: {ag.cell.coordinate}")
 
         self.assertEqual(my_ant.cell, my_model.grid[hill_cell])
 
