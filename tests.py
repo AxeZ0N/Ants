@@ -307,24 +307,15 @@ class TestHill(unittest.TestCase):
             cell=self.test_model.grid[hill_pos],
         )
 
-        self.test_ant.history = [1, 2, 3] # Dummy hx to test erasing
-
-        print(f"Ant:") 
-        [print(x) for x in list(vars(self.test_ant).items())]
-        print(f"Hill:") 
-        [print(x) for x in list(vars(hill).items())]
+        self.test_ant.storage = [food]  # Dummy hx to test erasing
+        self.test_ant.history = [1, 2, 3]  # Dummy hx to test erasing
 
         self.test_model.step()
-
-        print(f"Ant:") 
-        [print(x) for x in list(vars(self.test_ant).items())]
-        print(f"Hill:") 
-        [print(x) for x in list(vars(hill).items())]
 
         self.assertEqual(self.test_ant.storage, [])
         self.assertEqual(len(self.test_ant.history), 1)
 
-        self.assertEqual(self.hill.storage, [food])
+        self.assertEqual(hill.storage, [food])
 
     def test_hill_spawn(self):
         """Hills should spawn an ant on request. Ant has default attributes"""

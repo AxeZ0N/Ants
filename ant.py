@@ -211,3 +211,12 @@ class Ant(MyCellAgent):
 
         # Worst case
         return all_nbrs.select_random_cell()
+
+    def follow(self):
+        """Placeholder"""
+
+        # Worst case
+        all_nbrs = self.cell.get_neighborhood()
+
+        # Worst case
+        return all_nbrs.select_random_cell()
