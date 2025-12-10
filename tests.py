@@ -94,6 +94,30 @@ class TestAntWander(unittest.TestCase):
 
         self.assertEqual(self.test_ant.cell.coordinate, nothing_pos)
 
+    def test_reach_food(self):
+        """Integration test, make sure the phase works ok"""
+
+        ant_start_pos = (0,0)
+        food_pos = (2,2)
+
+        # Move ant to starting position
+        self.test_ant.cell = self.test_model.grid[ant_start_pos]
+
+        food = agents.Food(
+                model = self.test_model,
+                cell = self.test_model.grid[food_pos],
+                )
+
+        # Let the ant roll until it hits food or the area of the model^2
+        max_steps = (self.test_model.grid.width * self.test_model.grid.height) ** 2
+        step_count = 0
+        while step_count < max_steps:
+            self.test_model.step()
+            if self.test_ant.storage: break
+
+        # The sim stops eventually, test ant storage at that point
+        self.assertTrue(self.test_ant.storage)
+
 
 class TestAntHold(unittest.TestCase):
     def setUp(self):

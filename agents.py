@@ -77,7 +77,7 @@ class Food(MyFixedAgent):
                 if agent.storage:
                     continue
                 agent.storage.append(self)
-                agent.state = agent.HOLDING
+                agent.state = agent.HOLD
 
 
 class Smell(MyFixedAgent):
