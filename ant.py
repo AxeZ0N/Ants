@@ -150,12 +150,17 @@ class Ant(MyCellAgent):
         self.history.append(smell)
 
     def hold(self):
-        """Oldest Smell in HX -> Oldest Smell -> Panic"""
+        """Hill -> Oldest Smell in HX -> Oldest Smell -> Panic"""
 
         # Worst case
         all_nbrs = self.cell.get_neighborhood()
 
         cell_chooser = CellChoices(self)
+
+        # Sort by hill
+        hill_cells = cell_chooser.sort_agents_by(agents.Hill)
+        if hill_cells:
+            return hill_cells.select_random_cell()
 
         # Sort by age
         smell_cells = cell_chooser.sort_cells_by(agents.Smell)
