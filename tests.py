@@ -148,7 +148,9 @@ class TestAntHold(unittest.TestCase):
         # Step 7 times and see if the ant makes it around
         self.assertEqual(self.test_ant.cell.coordinate, start_pos)
 
-        [self.test_model.step() for _ in range(10)]
+        for _ in range(10):
+            self.test_model.step()
+            print(self.test_ant.cell.coordinate)
 
         print(f"Readout for smell ages:")
         for ag in self.test_model.agents:

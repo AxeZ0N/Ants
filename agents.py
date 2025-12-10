@@ -19,7 +19,6 @@ class MyFixedAgent(FixedAgent):
         if self.age > self.max_age:
             self.remove()
 
-
 class Hill(MyFixedAgent):
     """Home base. Holds food."""
 

@@ -91,7 +91,6 @@ class CellChoices:
             random=self.base.model.random,
         )
 
-
 class Ant(MyCellAgent):
     """
     Wander around until bumping into food
@@ -150,7 +149,7 @@ class Ant(MyCellAgent):
         self.history.append(smell)
 
     def hold(self):
-        """Oldest Smell -> Panic"""
+        """Oldest Smell in HX -> Oldest Smell -> Panic"""
 
         # Worst case
         all_nbrs = self.cell.get_neighborhood()
@@ -164,10 +163,10 @@ class Ant(MyCellAgent):
             attr="age",
         )
 
-        print(list(sorted_smells))
-
         if sorted_smells:
-            return sorted_smells[-1].cell
+            oldest_smell = sorted_smells[-1]
+            if oldest_smell in self.history:
+                return oldest_smell
 
         # Worst case
         return all_nbrs.select_random_cell()
