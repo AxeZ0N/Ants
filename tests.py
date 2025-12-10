@@ -125,7 +125,7 @@ class TestAntHold(unittest.TestCase):
         # Surround ant with a spiral of aged smells
         smells = []
 
-        start_pos, end_pos = self.ant_pos, (1, 1)
+        start_pos, end_pos = self.ant_pos, (2, 2)
 
         age = 0
 
@@ -145,10 +145,10 @@ class TestAntHold(unittest.TestCase):
 
                 smells += [smell]
 
-        # Step 7 times and see if the ant makes it around
+        # Step 10 times and see if the ant makes it around
         self.assertEqual(self.test_ant.cell.coordinate, start_pos)
 
-        [self.test_model.step() for _ in range(7)]
+        steps = [self.test_model.step() for _ in range(10)]
 
         self.assertEqual(self.test_ant.cell.coordinate, end_pos)
 
@@ -247,6 +247,11 @@ class TestAgent(unittest.TestCase):
         self.assertEqual(my_ant.cell, my_model.grid[old_smell_cell])
 
         my_model.step()
+
+        print(f"Readout for smell ages:")
+        for ag in my_model.agents:
+
+            print(f"Type: {type(ag)}, Age {ag.age}, Location: {ag.cell.coordinate}")
 
         self.assertEqual(my_ant.cell, my_model.grid[hill_cell])
 

@@ -15,6 +15,14 @@ class MyCellAgent(CellAgent):
     def __init__(self, model, cell=None):
         super().__init__(model)
         self.cell = cell
+        self.age = 0
+        self.max_age = 9e999
+
+    def _age(self):
+        """ """
+        self.age += 1
+        if self.age > self.max_age:
+            self.remove()
 
 
 @dataclass
@@ -125,6 +133,7 @@ class Ant(MyCellAgent):
         # print(self.state)
         self.drop_scent()
         self.cell = next_cell
+        self._age()
 
     def drop_scent(self):
         """Helps the ant remember where it's been"""
@@ -151,9 +160,9 @@ class Ant(MyCellAgent):
         # Sort by age
         smell_cells = cell_chooser.sort_cells_by(agents.Smell)
         sorted_smells = cell_chooser.sort_agents_by(
-                agents_to_sort = smell_cells.agents,
-                attr = "age",
-                )
+            agents_to_sort=smell_cells.agents,
+            attr="age",
+        )
 
         print(sorted_smells)
 
