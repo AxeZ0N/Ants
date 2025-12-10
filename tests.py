@@ -9,43 +9,93 @@ import model
 import ant
 
 
-class TestAgent(unittest.TestCase):
-    """ """
-
+class TestAntWander(unittest.TestCase):
     def setUp(self):
-        """ """
-        pass
+        """Ant arena! 3x3, ant in the middle"""
+        self.ant_pos = (1, 1)
 
-    def tearDown(self):
-        """ """
-        pass
-
-    def test_ant_prefer_food(self):
-        """Move onto food if possible"""
-
-        ant_cell = (1, 1)
-        food_cell = (2, 1)
-
-        my_model = model.Model(
+        self.test_model = model.Model(
             width=3,
             height=3,
             seed=1,
             players=None,
         )
 
-        my_ant = ant.Ant(
-            model=my_model,
-            cell=my_model.grid[ant_cell],
+        self.test_ant = ant.Ant(
+            model=self.test_model,
+            cell=self.test_model.grid[self.ant_pos],
         )
 
-        my_food = agents.Food(
-            model=my_model,
-            cell=my_model.grid[food_cell],
+        self.test_ant.state = self.test_ant.WANDER
+
+    def tearDown(self):
+        """Leave no survivors"""
+        self.test_model = None
+        self.test_ant = None
+
+    def test_prefer_food(self):
+        """Ants prefer adjacent food in state: WANDER"""
+
+        # Surround ant with tempting smells
+        smells = []
+
+        food_pos = (1, 0)
+
+        for i in range(0, 3):
+            for j in range(0, 3):
+                coord = (i, j)
+                if coord in (self.ant_pos, food_pos):
+                    continue
+
+                smell = agents.Smell(
+                    model=self.test_model,
+                    cell=self.test_model.grid[coord],
+                )
+
+                smells += [smell]
+
+        # Replace one smell with food
+        food = agents.Food(
+            model=self.test_model,
+            cell=self.test_model.grid[food_pos],
         )
 
-        my_model.step()
+        self.assertEqual(self.test_ant.cell.coordinate, self.ant_pos)
 
-        self.assertEqual(my_ant.cell, my_food.cell)
+        self.test_model.step()
+
+        self.assertEqual(self.test_ant.cell.coordinate, food_pos)
+
+    def test_avoid_smell(self):
+        """Ants prefer unvisited cells in state: WANDER"""
+
+        # Surround ant with tempting smells
+        smells = []
+
+        nothing_pos = (1, 0)
+
+        for i in range(0, 3):
+            for j in range(0, 3):
+                coord = (i, j)
+                if coord in (self.ant_pos, nothing_pos):
+                    continue
+
+                smell = agents.Smell(
+                    model=self.test_model,
+                    cell=self.test_model.grid[coord],
+                )
+
+                smells += [smell]
+
+        # Replace one smell with NOTHING
+        self.assertEqual(self.test_ant.cell.coordinate, self.ant_pos)
+
+        self.test_model.step()
+
+        self.assertEqual(self.test_ant.cell.coordinate, nothing_pos)
+
+
+class TestAgent(unittest.TestCase):
 
     def test_ant_avoid_smell(self):
         """Don't move onto smell if possible"""
