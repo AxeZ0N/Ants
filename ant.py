@@ -158,7 +158,7 @@ class Ant(MyCellAgent):
         cell_chooser = CellChoices(self)
 
         # Sort by hill
-        hill_cells = cell_chooser.sort_agents_by(agents.Hill)
+        hill_cells = cell_chooser.sort_cells_by(agents.Hill)
         if hill_cells:
             return hill_cells.select_random_cell()
 
@@ -173,7 +173,10 @@ class Ant(MyCellAgent):
         smells_in_history = [smell for smell in sorted_smells if smell in self.history]
 
         if smells_in_history:
-            return smells_in_history[-1].cell
+            # Pop the HX smell so we don't backtrack
+            oldest = smells_in_history[-1].cell
+            self.history.pop(self.history.index(oldest))
+            return oldest
 
         # Otherwise, return oldest smell
         if sorted_smells:

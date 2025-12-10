@@ -145,7 +145,7 @@ class TestAntHold(unittest.TestCase):
 
                 smells += [smell]
 
-        # Step 7 times and see if the ant makes it around
+        # Step 10 times and see if the ant makes it around
         self.assertEqual(self.test_ant.cell.coordinate, start_pos)
 
         for _ in range(10):
