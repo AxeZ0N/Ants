@@ -71,7 +71,10 @@ class CellChoices:
         if agents_to_sort is None:
             agents_to_sort = self.all_agents
 
-        return AgentSet(sorted(agents_to_sort, key=lambda x: getattr(x, attr)))
+        return AgentSet(
+            sorted(agents_to_sort, key=lambda x: getattr(x, attr)),
+            random=self.base.model.random,
+        )
 
     def sort_cells_by(self, type_, cells_to_sort=None):
         """Returns only cells that contain type_"""

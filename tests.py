@@ -97,23 +97,24 @@ class TestAntWander(unittest.TestCase):
     def test_reach_food(self):
         """Integration test, make sure the phase works ok"""
 
-        ant_start_pos = (0,0)
-        food_pos = (2,2)
+        ant_start_pos = (0, 0)
+        food_pos = (2, 2)
 
         # Move ant to starting position
         self.test_ant.cell = self.test_model.grid[ant_start_pos]
 
         food = agents.Food(
-                model = self.test_model,
-                cell = self.test_model.grid[food_pos],
-                )
+            model=self.test_model,
+            cell=self.test_model.grid[food_pos],
+        )
 
         # Let the ant roll until it hits food or the area of the model^2
         max_steps = (self.test_model.grid.width * self.test_model.grid.height) ** 2
         step_count = 0
         while step_count < max_steps:
             self.test_model.step()
-            if self.test_ant.storage: break
+            if self.test_ant.storage:
+                break
 
         # The sim stops eventually, test ant storage at that point
         self.assertTrue(self.test_ant.storage)
@@ -185,7 +186,7 @@ class TestAntHold(unittest.TestCase):
         for _ in range(8):
             self.test_model.step()
             for ag in self.test_model.agents:
-                #print(f"Type: {type(ag)}, Age {ag.age}, Location: {ag.cell.coordinate}")
+                # print(f"Type: {type(ag)}, Age {ag.age}, Location: {ag.cell.coordinate}")
                 pass
 
         self.assertEqual(self.test_ant.cell.coordinate, end_pos)
@@ -225,6 +226,45 @@ class TestAntHold(unittest.TestCase):
         self.test_model.step()
 
         self.assertEqual(self.test_ant.cell.coordinate, hill_pos)
+
+
+class TestFood(unittest.TestCase):
+    def setUp(self):
+        """Ant arena! 3x3, ant in the middle"""
+        self.ant_pos = (1, 1)
+
+        self.test_model = model.Model(
+            width=3,
+            height=3,
+            seed=1,
+            players=None,
+        )
+
+        self.test_ant = ant.Ant(
+            model=self.test_model,
+            cell=self.test_model.grid[self.ant_pos],
+        )
+
+        self.test_ant.state = self.test_ant.WANDER
+
+    def tearDown(self):
+        """Leave no survivors"""
+        self.test_model = None
+        self.test_ant = None
+
+    def test_push_food(self):
+        """When an ant steps on the food, the ant should recieve a food"""
+
+        food_pos = (1, 1)
+
+        food = agents.Food(
+            model=self.test_model,
+            cell=self.test_model.grid[food_pos],
+        )
+
+        self.test_model.step()
+
+        self.assertEqual(self.test_ant.storage, [food])
 
 
 class TestAgent(unittest.TestCase):
