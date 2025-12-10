@@ -95,42 +95,65 @@ class TestAntWander(unittest.TestCase):
         self.assertEqual(self.test_ant.cell.coordinate, nothing_pos)
 
 
-class TestAgent(unittest.TestCase):
+class TestAntHold(unittest.TestCase):
+    def setUp(self):
+        """Ant arena! 3x3, ant in the middle"""
+        self.ant_pos = (1, 1)
 
-    def test_ant_avoid_smell(self):
-        """Don't move onto smell if possible"""
-
-        ant_cell = (1, 1)
-        empty_cell = (2, 1)
-
-        my_model = model.Model(
+        self.test_model = model.Model(
             width=3,
             height=3,
             seed=1,
             players=None,
         )
 
-        my_ant = ant.Ant(
-            model=my_model,
-            cell=my_model.grid[ant_cell],
+        self.test_ant = ant.Ant(
+            model=self.test_model,
+            cell=self.test_model.grid[self.ant_pos],
         )
 
-        # Fill all the neighbors with smells
-        for cell in my_ant.cell.get_neighborhood():
-            new_smell = agents.Smell(
-                model=my_model,
-                cell=cell,
-            )
+        self.test_ant.state = self.test_ant.WANDER
 
-            # cell.add_agent(new_smell)
+    def tearDown(self):
+        """Leave no survivors"""
+        self.test_model = None
+        self.test_ant = None
 
-        # Remove all the agents from the cell I want empty
-        clear_cell = [x.remove() for x in my_model.grid[empty_cell].agents]
+    def test_follow_trail(self):
+        """Ants"""
 
-        my_model.step()
+        # Surround ant with a spiral of aged smells
+        smells = []
 
-        self.assertEqual(my_ant.cell, my_model.grid[empty_cell])
+        start_pos, end_pos = self.ant_pos, (1, 1)
 
+        age = 0
+
+        for i in range(0, 3):
+            for j in range(0, 3):
+                coord = (i, j)
+                if coord in (self.ant_pos):
+                    continue
+
+                smell = agents.Smell(
+                    model=self.test_model,
+                    cell=self.test_model.grid[coord],
+                )
+                age += 1
+
+                smell.age = age
+
+                smells += [smell]
+
+        # Step 7 times and see if the ant makes it around
+        self.assertEqual(self.test_ant.cell.coordinate, start_pos)
+
+        [self.test_model.step() for _ in range(7)]
+
+        self.assertEqual(self.test_ant.cell.coordinate, end_pos)
+
+
+class TestAgent(unittest.TestCase):
     def test_hill_spawn(self):
         """Hills should spawn an ant on request. Ant has default attributes"""
 

@@ -58,22 +58,28 @@ class CellChoices:
             self.nbr_cells.agents, random=cell_haver.model.random
         )
 
-    def sort_agents_by(self, attr):
+    def sort_agents_by(self, agents_to_sort=None, attr):
         """Returns all agents in nbrs, sorted by attr."""
-        if not self.all_agents:
+        if not self.agents_to_sort:
             return []
 
-        return AgentSet(sorted(self.all_agents, key=lambda x: getattr(x, attr)))
+        if agents_to_sort is None:
+            agents_to_sort = self.all_agents
 
-    def sort_cells_by(self, type_):
+        return AgentSet(sorted(agents_to_sort, key=lambda x: getattr(x, attr)))
+
+    def sort_cells_by(self, cells_to_sort=None, type_):
         """Returns only cells that contain type_"""
 
         assert isinstance(type_, type)
 
+        if cells_to_sort is None:
+            cells_to_sort = self.nbr_cells
+
         return CellCollection(
             (
                 agent.cell
-                for cell in self.nbr_cells
+                for cell in cells_to_sort
                 for agent in cell.agents
                 if isinstance(agent, type_)
             ),
@@ -115,7 +121,7 @@ class Ant(MyCellAgent):
             case self.WANDER:
                 next_cell = self.wander()
             case self.HOLDING:
-                next_cell = self.holding()
+                next_cell = self.hold()
             case self.FOLLOW:
                 next_cell = self.follow()
 
@@ -137,19 +143,50 @@ class Ant(MyCellAgent):
 
         self.history.append(smell)
 
-    def wander(self):
+    def hold(self):
+        """Oldest Smell -> Panic"""
+
+        # Worst case
+        all_nbrs = self.cell.get_neighborhood()
+
         cell_chooser = CellChoices(self)
 
+        # Sort by age
+        smell_cells = cell_chooser.sort_cells_by(agents.Smell)
+        sorted_smells = AgentSet(smell_cells.agents).groupby("age")
+
+        print(sorted_smells)
+
+        if sorted_smells:
+            return sorted_smells[-1].cell
+
+        # Worst case
+        return all_nbrs.select_random_cell()
+
+    def wander(self):
+        """Food -> None -> Smell"""
+
+        # Worst case
         all_nbrs = self.cell.get_neighborhood()
-        print(type(all_nbrs))
+
+        cell_chooser = CellChoices(self)
+
+        # If food, move there
+        food_nbrs = cell_chooser.sort_cells_by(agents.Food)
+        if food_nbrs:
+            return food_nbrs.select_random_cell()
+
+        # Get smells only
+        # Subtract smell cells from all cells
         smell_nbrs = cell_chooser.sort_cells_by(agents.Smell)
 
         no_smell_cells = CellCollection(
-            set(all_nbrs).difference(set(smell_nbrs)),
+            set(all_nbrs).difference(smell_nbrs),
             random=self.model.random,
         )
 
-        ret = no_smell_cells.select_random_cell()
-        print(ret.coordinate)
+        if no_smell_cells:
+            return no_smell_cells.select_random_cell()
 
-        return ret
+        # Worst case
+        return all_nbrs.select_random_cell()
