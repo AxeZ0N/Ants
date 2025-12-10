@@ -91,6 +91,7 @@ class CellChoices:
             random=self.base.model.random,
         )
 
+
 class Ant(MyCellAgent):
     """
     Wander around until bumping into food
@@ -163,10 +164,11 @@ class Ant(MyCellAgent):
             attr="age",
         )
 
-        if sorted_smells:
-            oldest_smell = sorted_smells[-1]
-            if oldest_smell in self.history:
-                return oldest_smell
+        # Filter by cells in HX
+        smells_in_history = filter(
+            sorted_smells,
+            key=lambda smell: smell in self.history,
+        )
 
         # Worst case
         return all_nbrs.select_random_cell()
