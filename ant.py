@@ -173,7 +173,8 @@ class Ant(MyCellAgent):
         # Otherwise, return oldest smell
         if sorted_smells:
             for oldest in reversed(sorted_smells):
-                if oldest in self.backtrack: continue
+                if oldest in self.backtrack:
+                    continue
                 self.backtrack += [oldest]
                 return oldest.cell
 

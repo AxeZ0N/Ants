@@ -122,39 +122,47 @@ class TestAntHold(unittest.TestCase):
     def test_follow_trail(self):
         """Ants"""
 
+        # 3 4 5
+        # 2   6
+        # 1 8 7
+
+        spiral_coords = [
+            (0, 0),  # 1
+            (0, 1),  # 2
+            (0, 2),  # 3
+            (1, 2),  # 4
+            (2, 2),  # 5
+            (2, 1),  # 6
+            (2, 0),  # 7
+            (1, 0),  # 8
+        ]
+
+        start_pos, end_pos = self.ant_pos, spiral_coords[0]
+
         # Surround ant with a spiral of aged smells
         smells = []
-
-        start_pos, end_pos = self.ant_pos, (2, 2)
-
         age = 0
 
-        for i in range(0, 3):
-            for j in range(0, 3):
-                coord = (i, j)
-                if coord in (self.ant_pos):
-                    continue
+        for coord in spiral_coords:
+            smell = agents.Smell(
+                model=self.test_model,
+                cell=self.test_model.grid[coord],
+            )
 
-                smell = agents.Smell(
-                    model=self.test_model,
-                    cell=self.test_model.grid[coord],
-                )
-                age += 1
+            age += 1
 
-                smell.age = age
+            smell.age = age
 
-                smells += [smell]
+            smells += [smell]
 
-        # Step 10 times and see if the ant makes it around
+        # Step 8 times and see if the ant makes it around
         self.assertEqual(self.test_ant.cell.coordinate, start_pos)
 
-        for _ in range(10):
+        for _ in range(8):
             self.test_model.step()
-            print(self.test_ant.cell.coordinate)
-
-        print(f"Readout for smell ages:")
-        for ag in self.test_model.agents:
-            print(f"Type: {type(ag)}, Age {ag.age}, Location: {ag.cell.coordinate}")
+            for ag in self.test_model.agents:
+                #print(f"Type: {type(ag)}, Age {ag.age}, Location: {ag.cell.coordinate}")
+                pass
 
         self.assertEqual(self.test_ant.cell.coordinate, end_pos)
 
