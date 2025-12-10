@@ -117,6 +117,7 @@ class Ant(MyCellAgent):
         """ """
         super().__init__(model, cell)
         self.history = []
+        self.backtrack = []
         self.storage = []
         self.state = Ant.DEFAULT_STATE
 
@@ -169,18 +170,12 @@ class Ant(MyCellAgent):
             attr="age",
         )
 
-        # Filter by cells in HX
-        smells_in_history = [smell for smell in sorted_smells if smell in self.history]
-
-        if smells_in_history:
-            # Pop the HX smell so we don't backtrack
-            oldest = smells_in_history[-1].cell
-            self.history.pop(self.history.index(oldest))
-            return oldest
-
         # Otherwise, return oldest smell
         if sorted_smells:
-            return sorted_smells[-1].cell
+            oldest = sorted_smells[-1]
+            if oldest not in self.backtrack:
+                self.backtrack += [oldest]
+                return oldest.cell
 
         # Worst case
         return all_nbrs.select_random_cell()
