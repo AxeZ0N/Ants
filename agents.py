@@ -9,8 +9,15 @@ class MyFixedAgent(FixedAgent):
     def __init__(self, model, cell=None):
         super().__init__(model)
         self.cell = cell
+        self.age = 0
+        self.max_age = 9e99
         pass
 
+    def _age(self):
+        """ """
+        self.age += 1
+        if self.age > self.max_age:
+            self.remove()
 
 class Hill(MyFixedAgent):
     """Home base. Holds food."""
@@ -25,6 +32,7 @@ class Hill(MyFixedAgent):
     def step(self):
         """ """
         self.suck_food()
+        self._age()
 
     def spawn(self, amt):
         """Can spawn any number of things at self.cell.coordinate"""
@@ -59,6 +67,7 @@ class Food(MyFixedAgent):
     def step(self):
         """Every iteration, check for ants to push food on"""
         self.push_food()
+        self._age()
 
     def push_food(self):
         """If the agent moves, try to push food"""
@@ -100,9 +109,3 @@ class Smell(MyFixedAgent):
                 continue
             if agent.storage:
                 self.seen_food = True
-
-    def _age(self):
-        """ """
-        self.age += 1
-        if self.age > self.max_age:
-            self.remove()

@@ -58,17 +58,14 @@ class CellChoices:
             self.nbr_cells.agents, random=cell_haver.model.random
         )
 
-    def sort_agents_by(self, agents_to_sort=None, attr):
+    def sort_agents_by(self, attr, agents_to_sort=None):
         """Returns all agents in nbrs, sorted by attr."""
-        if not self.agents_to_sort:
-            return []
-
         if agents_to_sort is None:
             agents_to_sort = self.all_agents
 
         return AgentSet(sorted(agents_to_sort, key=lambda x: getattr(x, attr)))
 
-    def sort_cells_by(self, cells_to_sort=None, type_):
+    def sort_cells_by(self, type_, cells_to_sort=None):
         """Returns only cells that contain type_"""
 
         assert isinstance(type_, type)
@@ -153,7 +150,10 @@ class Ant(MyCellAgent):
 
         # Sort by age
         smell_cells = cell_chooser.sort_cells_by(agents.Smell)
-        sorted_smells = AgentSet(smell_cells.agents).groupby("age")
+        sorted_smells = cell_chooser.sort_agents_by(
+                agents_to_sort = smell_cells.agents,
+                attr = "age",
+                )
 
         print(sorted_smells)
 
