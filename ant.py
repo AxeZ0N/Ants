@@ -110,7 +110,7 @@ class Ant(MyCellAgent):
     """
 
     color, size = "red", 20
-    WANDER, HOLDING, FOLLOW = "WANDER", "HOLDING", "FOLLOW"
+    WANDER, HOLD, FOLLOW = "WANDER", "HOLDING", "FOLLOW"
     DEFAULT_STATE = WANDER
 
     def __init__(self, model, cell=None):
@@ -125,7 +125,7 @@ class Ant(MyCellAgent):
         match self.state:
             case self.WANDER:
                 next_cell = self.wander()
-            case self.HOLDING:
+            case self.HOLD:
                 next_cell = self.hold()
             case self.FOLLOW:
                 next_cell = self.follow()
